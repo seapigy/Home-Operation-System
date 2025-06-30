@@ -7,16 +7,21 @@ import BottomNavBar from "./components/BottomNavBar";
 
 export default function App() {
   const [activeRoom, setActiveRoom] = useState("Home");
+  const [isEditMode, setIsEditMode] = useState(false);
+
+  const handleToggleEditMode = () => {
+    setIsEditMode(!isEditMode);
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-zinc-900 text-black dark:text-white transition-colors">
       <TopNavBar activeRoom={activeRoom} setActiveRoom={setActiveRoom} />
       <div className="flex flex-col lg:flex-row flex-1 overflow-hidden lg:pb-20">
         <LeftPanel activeRoom={activeRoom} />
-        <CenterPanel activeRoom={activeRoom} />
+        <CenterPanel activeRoom={activeRoom} isEditMode={isEditMode} onToggleEditMode={handleToggleEditMode} />
         <RightPanel />
       </div>
-      <BottomNavBar />
+      <BottomNavBar activeRoom={activeRoom} isEditMode={isEditMode} onToggleEditMode={handleToggleEditMode} />
     </div>
   );
 }
