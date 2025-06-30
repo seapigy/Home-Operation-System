@@ -11,7 +11,7 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-zinc-900 text-black dark:text-white transition-colors">
       <TopNavBar activeRoom={activeRoom} setActiveRoom={setActiveRoom} />
-      <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
+      <div className="flex flex-col lg:flex-row flex-1 overflow-hidden lg:pb-20">
         <LeftPanel activeRoom={activeRoom} />
         <CenterPanel activeRoom={activeRoom} />
         <RightPanel />
