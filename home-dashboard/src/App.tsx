@@ -1,0 +1,22 @@
+import { useState } from "react";
+import TopNavBar from "./components/TopNavBar";
+import LeftPanel from "./components/LeftPanel";
+import CenterPanel from "./components/CenterPanel";
+import RightPanel from "./components/RightPanel";
+import BottomNavBar from "./components/BottomNavBar";
+
+export default function App() {
+  const [activeRoom, setActiveRoom] = useState("Home");
+
+  return (
+    <div className="min-h-screen flex flex-col bg-white dark:bg-zinc-900 text-black dark:text-white transition-colors">
+      <TopNavBar activeRoom={activeRoom} setActiveRoom={setActiveRoom} />
+      <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
+        <LeftPanel activeRoom={activeRoom} />
+        <CenterPanel activeRoom={activeRoom} />
+        <RightPanel />
+      </div>
+      <BottomNavBar />
+    </div>
+  );
+}
