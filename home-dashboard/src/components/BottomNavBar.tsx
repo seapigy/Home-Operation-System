@@ -34,7 +34,7 @@ export default function BottomNavBar() {
               onClick={() => handleNavClick(item.id)}
               className={`flex flex-col items-center justify-center py-2 px-1 sm:px-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-800 ${
                 activeItem === item.id
-                  ? "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
+                  ? "bg-zinc-200 dark:bg-zinc-600 text-zinc-800 dark:text-zinc-200 font-semibold"
                   : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-700/50"
               }`}
               aria-label={item.label}
