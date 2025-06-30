@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   DndContext,
   closestCenter,
@@ -21,10 +21,11 @@ import { CSS } from "@dnd-kit/utilities";
 import EnergyWidget from "./EnergyWidget";
 import WaterStatusWidget from "./WaterStatusWidget";
 import SceneButtons from "./SceneButtons";
+import WidgetLibrary from "./WidgetLibrary";
 
 type Widget = {
   id: string;
-  type: 'energy' | 'water' | 'scene' | 'temperature' | 'weather' | 'toggle';
+  type: 'energy' | 'water' | 'scene' | 'temperature' | 'weather' | 'toggle' | 'media' | 'notes' | 'lighting' | 'security';
   title: string;
   component: React.ReactNode;
 };
@@ -33,6 +34,9 @@ type RoomEditorProps = {
   activeRoom: string;
   isEditMode: boolean;
   onToggleEditMode: () => void;
+  onAddWidget: () => void;
+  shouldOpenWidgetLibrary: boolean;
+  onWidgetLibraryOpened: () => void;
 };
 
 function SortableWidget({ widget, isEditMode, onRemove }: { widget: Widget; isEditMode: boolean; onRemove: (id: string) => void }) {
@@ -89,7 +93,28 @@ function SortableWidget({ widget, isEditMode, onRemove }: { widget: Widget; isEd
   );
 }
 
-export default function RoomEditor({ activeRoom, isEditMode, onToggleEditMode }: RoomEditorProps) {
+export default function RoomEditor({ 
+  activeRoom, 
+  isEditMode, 
+  onToggleEditMode, 
+  onAddWidget,
+  shouldOpenWidgetLibrary,
+  onWidgetLibraryOpened
+}: RoomEditorProps) {
+  // Override the onAddWidget prop to open the widget library
+  const handleAddWidgetFromNav = () => {
+    if (isEditMode) {
+      setIsWidgetLibraryOpen(true);
+    }
+  };
+
+  // Watch for shouldOpenWidgetLibrary prop changes
+  useEffect(() => {
+    if (shouldOpenWidgetLibrary && isEditMode) {
+      setIsWidgetLibraryOpen(true);
+      onWidgetLibraryOpened();
+    }
+  }, [shouldOpenWidgetLibrary, isEditMode, onWidgetLibraryOpened]);
   const [widgets, setWidgets] = useState<Widget[]>(() => {
     // Initialize with default widgets based on room
     if (activeRoom === "Home") {
@@ -131,6 +156,8 @@ export default function RoomEditor({ activeRoom, isEditMode, onToggleEditMode }:
     }
   });
 
+  const [isWidgetLibraryOpen, setIsWidgetLibraryOpen] = useState(false);
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -155,69 +182,105 @@ export default function RoomEditor({ activeRoom, isEditMode, onToggleEditMode }:
     setWidgets((items) => items.filter((item) => item.id !== widgetId));
   };
 
+  const handleAddWidget = (widgetData: any) => {
+    const newWidget: Widget = {
+      id: widgetData.id,
+      type: widgetData.id.replace('-widget', '').replace('-', '') as any,
+      title: widgetData.name,
+      component: widgetData.component
+    };
+    
+    setWidgets((items) => [...items, newWidget]);
+  };
+
+  const handleOpenWidgetLibrary = () => {
+    setIsWidgetLibraryOpen(true);
+  };
+
+  // Connect the onAddWidget prop to open the widget library
+  const handleAddWidgetRequest = () => {
+    if (isEditMode) {
+      setIsWidgetLibraryOpen(true);
+    }
+  };
+
+  const handleCloseWidgetLibrary = () => {
+    setIsWidgetLibraryOpen(false);
+  };
+
   return (
-    <div className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8">
-      {/* Header with Room Title */}
-      <div className="mb-4 sm:mb-6">
-        <h2 className="text-base sm:text-lg font-semibold text-zinc-800 dark:text-zinc-200">
-          {activeRoom === "Home" ? "Main Widgets" : `${activeRoom} Widgets`}
-        </h2>
+    <>
+      <div className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8">
+        {/* Header with Room Title */}
+        <div className="mb-4 sm:mb-6">
+          <h2 className="text-base sm:text-lg font-semibold text-zinc-800 dark:text-zinc-200">
+            {activeRoom === "Home" ? "Main Widgets" : `${activeRoom} Widgets`}
+          </h2>
+        </div>
+
+        {/* Edit Mode Instructions */}
+        {isEditMode && (
+          <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+            <div className="flex items-center gap-2 text-sm text-blue-800 dark:text-blue-200">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              </svg>
+              <span>Drag widgets to rearrange, click X to remove, or use Add button to add new widgets</span>
+            </div>
+          </div>
+        )}
+
+        {/* Widgets Container */}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={widgets.map((widget) => widget.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="space-y-4 sm:space-y-6">
+              {widgets.map((widget) => (
+                <SortableWidget
+                  key={widget.id}
+                  widget={widget}
+                  isEditMode={isEditMode}
+                  onRemove={handleRemoveWidget}
+                />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
+
+        {/* Empty State */}
+        {widgets.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-zinc-400 dark:text-zinc-500 mb-4">
+              <svg className="w-16 h-16 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-medium text-zinc-600 dark:text-zinc-400 mb-2">
+              No widgets configured
+            </h3>
+            <p className="text-sm text-zinc-500 dark:text-zinc-500">
+              {isEditMode 
+                ? 'Use the Add button to add widgets to this room'
+                : 'Enable edit mode to add widgets'
+              }
+            </p>
+          </div>
+        )}
       </div>
 
-      {/* Edit Mode Instructions */}
-      {isEditMode && (
-        <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-          <div className="flex items-center gap-2 text-sm text-blue-800 dark:text-blue-200">
-            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-            </svg>
-            <span>Drag widgets to rearrange or click the X to remove them</span>
-          </div>
-        </div>
-      )}
-
-      {/* Widgets Container */}
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext
-          items={widgets.map((widget) => widget.id)}
-          strategy={verticalListSortingStrategy}
-        >
-          <div className="space-y-4 sm:space-y-6">
-            {widgets.map((widget) => (
-              <SortableWidget
-                key={widget.id}
-                widget={widget}
-                isEditMode={isEditMode}
-                onRemove={handleRemoveWidget}
-              />
-            ))}
-          </div>
-        </SortableContext>
-      </DndContext>
-
-      {/* Empty State */}
-      {widgets.length === 0 && (
-        <div className="text-center py-12">
-          <div className="text-zinc-400 dark:text-zinc-500 mb-4">
-            <svg className="w-16 h-16 mx-auto" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" clipRule="evenodd" />
-            </svg>
-          </div>
-          <h3 className="text-lg font-medium text-zinc-600 dark:text-zinc-400 mb-2">
-            No widgets configured
-          </h3>
-          <p className="text-sm text-zinc-500 dark:text-zinc-500">
-            {isEditMode 
-              ? 'Add widgets to customize your room layout'
-              : 'Enable edit mode to add widgets'
-            }
-          </p>
-        </div>
-      )}
-    </div>
+      {/* Widget Library Modal */}
+      <WidgetLibrary
+        isOpen={isWidgetLibraryOpen}
+        onClose={handleCloseWidgetLibrary}
+        onAddWidget={handleAddWidget}
+        existingWidgetIds={widgets.map(w => w.id)}
+      />
+    </>
   );
 } 
