@@ -40,8 +40,8 @@ export default function AppleTVControlWidget() {
               {/* Up quadrant */}
               <button
                 onClick={() => handleDirectionalClick('up')}
-                className={`absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-32 sm:w-36 sm:h-36 bg-gradient-to-b from-zinc-700 to-zinc-800 dark:from-zinc-600 dark:to-zinc-700 hover:from-zinc-600 hover:to-zinc-700 dark:hover:from-zinc-500 dark:hover:to-zinc-600 transition-all duration-200 ${
-                  activeDirection === 'up' ? 'from-blue-500 to-blue-600 dark:from-blue-400 dark:to-blue-500' : ''
+                className={`absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-32 sm:w-36 sm:h-36 bg-zinc-700 dark:bg-zinc-600 hover:bg-zinc-600 dark:hover:bg-zinc-500 transition-all duration-200 ${
+                  activeDirection === 'up' ? 'bg-blue-500 dark:bg-blue-400' : ''
                 }`}
                 style={{
                   clipPath: 'polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)',
@@ -49,8 +49,8 @@ export default function AppleTVControlWidget() {
                   transformOrigin: '50% 50%'
                 }}
               >
-                <div className="absolute top-8 left-1/2 transform -translate-x-1/2 rotate-45deg">
-                  <svg className="w-8 h-8 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
+                <div className="absolute top-6 left-1/2 transform -translate-x-1/2 rotate-45deg">
+                  <svg className="w-6 h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
                   </svg>
                 </div>
@@ -59,8 +59,8 @@ export default function AppleTVControlWidget() {
               {/* Right quadrant */}
               <button
                 onClick={() => handleDirectionalClick('right')}
-                className={`absolute top-1/2 right-0 transform -translate-y-1/2 w-32 h-32 sm:w-36 sm:h-36 bg-gradient-to-l from-zinc-700 to-zinc-800 dark:from-zinc-600 dark:to-zinc-700 hover:from-zinc-600 hover:to-zinc-700 dark:hover:from-zinc-500 dark:hover:to-zinc-600 transition-all duration-200 ${
-                  activeDirection === 'right' ? 'from-blue-500 to-blue-600 dark:from-blue-400 dark:to-blue-500' : ''
+                className={`absolute top-1/2 right-0 transform -translate-y-1/2 w-32 h-32 sm:w-36 sm:h-36 bg-zinc-700 dark:bg-zinc-600 hover:bg-zinc-600 dark:hover:bg-zinc-500 transition-all duration-200 ${
+                  activeDirection === 'right' ? 'bg-blue-500 dark:bg-blue-400' : ''
                 }`}
                 style={{
                   clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
@@ -68,8 +68,8 @@ export default function AppleTVControlWidget() {
                   transformOrigin: '50% 50%'
                 }}
               >
-                <div className="absolute top-1/2 right-8 transform -translate-y-1/2 rotate-45deg">
-                  <svg className="w-8 h-8 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
+                <div className="absolute top-1/2 right-6 transform -translate-y-1/2 rotate-45deg">
+                  <svg className="w-6 h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
@@ -78,8 +78,8 @@ export default function AppleTVControlWidget() {
               {/* Down quadrant */}
               <button
                 onClick={() => handleDirectionalClick('down')}
-                className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-32 sm:w-36 sm:h-36 bg-gradient-to-t from-zinc-700 to-zinc-800 dark:from-zinc-600 dark:to-zinc-700 hover:from-zinc-600 hover:to-zinc-700 dark:hover:from-zinc-500 dark:hover:to-zinc-600 transition-all duration-200 ${
-                  activeDirection === 'down' ? 'from-blue-500 to-blue-600 dark:from-blue-400 dark:to-blue-500' : ''
+                className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-32 sm:w-36 sm:h-36 bg-zinc-700 dark:bg-zinc-600 hover:bg-zinc-600 dark:hover:bg-zinc-500 transition-all duration-200 ${
+                  activeDirection === 'down' ? 'bg-blue-500 dark:bg-blue-400' : ''
                 }`}
                 style={{
                   clipPath: 'polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%)',
@@ -87,8 +87,8 @@ export default function AppleTVControlWidget() {
                   transformOrigin: '50% 50%'
                 }}
               >
-                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 rotate-135deg">
-                  <svg className="w-8 h-8 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
+                <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 rotate-135deg">
+                  <svg className="w-6 h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                   </svg>
                 </div>
@@ -97,8 +97,8 @@ export default function AppleTVControlWidget() {
               {/* Left quadrant */}
               <button
                 onClick={() => handleDirectionalClick('left')}
-                className={`absolute top-1/2 left-0 transform -translate-y-1/2 w-32 h-32 sm:w-36 sm:h-36 bg-gradient-to-r from-zinc-700 to-zinc-800 dark:from-zinc-600 dark:to-zinc-700 hover:from-zinc-600 hover:to-zinc-700 dark:hover:from-zinc-500 dark:hover:to-zinc-600 transition-all duration-200 ${
-                  activeDirection === 'left' ? 'from-blue-500 to-blue-600 dark:from-blue-400 dark:to-blue-500' : ''
+                className={`absolute top-1/2 left-0 transform -translate-y-1/2 w-32 h-32 sm:w-36 sm:h-36 bg-zinc-700 dark:bg-zinc-600 hover:bg-zinc-600 dark:hover:bg-zinc-500 transition-all duration-200 ${
+                  activeDirection === 'left' ? 'bg-blue-500 dark:bg-blue-400' : ''
                 }`}
                 style={{
                   clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
@@ -106,8 +106,8 @@ export default function AppleTVControlWidget() {
                   transformOrigin: '50% 50%'
                 }}
               >
-                <div className="absolute top-1/2 left-8 transform -translate-y-1/2 rotate-135deg">
-                  <svg className="w-8 h-8 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
+                <div className="absolute top-1/2 left-6 transform -translate-y-1/2 rotate-135deg">
+                  <svg className="w-6 h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
