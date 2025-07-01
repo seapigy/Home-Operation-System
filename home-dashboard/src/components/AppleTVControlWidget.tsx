@@ -1,102 +1,229 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 export default function AppleTVControlWidget() {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [activeDevice, setActiveDevice] = useState("Living Room");
+  const [volume, setVolume] = useState(50);
+  const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
+  const [isPoweredOn, setIsPoweredOn] = useState(true);
 
-  const handleDirectionalClick = (direction: string) => {
-    console.log(`Apple TV: ${direction} button pressed`);
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    setTouchStart({ x: touch.clientX, y: touch.clientY });
   };
 
-  const handleMediaClick = (action: string) => {
-    console.log(`Apple TV: ${action} button pressed`);
-    if (action === 'play') {
-      setIsPlaying(true);
-    } else if (action === 'pause') {
-      setIsPlaying(false);
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (!touchStart) return;
+    
+    const touch = e.changedTouches[0];
+    const deltaX = touch.clientX - touchStart.x;
+    const deltaY = touch.clientY - touchStart.y;
+    const minSwipeDistance = 30;
+
+    if (Math.abs(deltaX) < minSwipeDistance && Math.abs(deltaY) < minSwipeDistance) {
+      console.log("Select");
+      return;
+    }
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX > 0) {
+        console.log("Swipe Right");
+      } else {
+        console.log("Swipe Left");
+      }
+    } else {
+      if (deltaY > 0) {
+        console.log("Swipe Down");
+      } else {
+        console.log("Swipe Up");
+      }
+    }
+    
+    setTouchStart(null);
+  };
+
+  const handlePlayPause = () => {
+    setIsPlaying(!isPlaying);
+    console.log(isPlaying ? "Pause" : "Play");
+  };
+
+  const handleVolumeChange = (direction: 'up' | 'down') => {
+    if (direction === 'up' && volume < 100) {
+      setVolume(volume + 10);
+      console.log("Volume Up");
+    } else if (direction === 'down' && volume > 0) {
+      setVolume(volume - 10);
+      console.log("Volume Down");
     }
   };
 
+  const handleMenu = () => {
+    console.log("Menu");
+  };
+
+  const handleVoice = () => {
+    console.log("Voice Input (not implemented)");
+  };
+
+  const handleAppLaunch = (appName: string) => {
+    console.log(`Launching ${appName}`);
+  };
+
+  const handleDeviceSwitch = (device: string) => {
+    setActiveDevice(device);
+    console.log(`Switched to: ${device}`);
+  };
+
+  const handlePowerToggle = () => {
+    setIsPoweredOn(!isPoweredOn);
+    console.log(`Apple TV ${isPoweredOn ? 'Off' : 'On'}`);
+  };
+
+  const apps = [
+    { name: "Netflix", icon: "📺", color: "bg-red-500" },
+    { name: "YouTube", icon: "📱", color: "bg-red-600" },
+    { name: "Prime Video", icon: "📦", color: "bg-blue-500" },
+    { name: "Apple TV+", icon: "🍎", color: "bg-gray-600" },
+    { name: "Disney+", icon: "🏰", color: "bg-blue-600" }
+  ];
+
+  const devices = ["Living Room", "Bedroom", "Office"];
+
   return (
-    <div className="bg-zinc-900 dark:bg-zinc-800 rounded-xl shadow-md p-4 sm:p-6">
-      <h3 className="text-lg font-semibold text-zinc-100 dark:text-zinc-200 mb-6 flex items-center gap-2">
-        <span className="text-xl">🍎</span>
-        Apple TV Controls
-      </h3>
+    <div className="bg-white dark:bg-zinc-800 rounded-xl shadow-md p-4 sm:p-6 min-h-[400px]">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 flex items-center gap-2">
+          <span className="text-xl">🍎</span>
+          Apple TV Controls
+        </h3>
+        <button
+          onClick={handlePowerToggle}
+          className={`px-4 py-2 rounded-full font-medium text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 hover:scale-105 active:scale-95 ${
+            isPoweredOn 
+              ? 'bg-red-500 hover:bg-red-600 text-white shadow-md hover:shadow-lg' 
+              : 'bg-green-500 hover:bg-green-600 text-white shadow-md hover:shadow-lg'
+          }`}
+        >
+          <span className="flex items-center gap-2">
+            <span className="text-sm">⚡</span>
+            {isPoweredOn ? 'Turn Off' : 'Turn On'}
+          </span>
+        </button>
+      </div>
 
-      {/* Directional Controls */}
-      <div className="mb-8 flex justify-center">
-        <div className="relative">
-          {/* Outer ring for directional buttons */}
-          <div className="relative w-48 h-48 sm:w-56 sm:h-56">
-            {/* Up button */}
-            <button
-              onClick={() => handleDirectionalClick('up')}
-              className="absolute top-0 left-1/2 transform -translate-x-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-zinc-800 dark:bg-zinc-700 hover:bg-zinc-700 dark:hover:bg-zinc-600 rounded-full transition-colors flex items-center justify-center border border-zinc-600 dark:border-zinc-500"
-            >
-              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
-              </svg>
-            </button>
+      {/* Device Switcher */}
+      <div className="mb-4">
+        <select
+          value={activeDevice}
+          onChange={(e) => handleDeviceSwitch(e.target.value)}
+          className="w-full px-3 py-2 bg-zinc-100 dark:bg-zinc-700 border border-zinc-300 dark:border-zinc-600 rounded-lg text-sm text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          {devices.map((device) => (
+            <option key={device} value={device}>{device}</option>
+          ))}
+        </select>
+      </div>
 
-            {/* Right button */}
-            <button
-              onClick={() => handleDirectionalClick('right')}
-              className="absolute top-1/2 right-0 transform -translate-y-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-zinc-800 dark:bg-zinc-700 hover:bg-zinc-700 dark:hover:bg-zinc-600 rounded-full transition-colors flex items-center justify-center border border-zinc-600 dark:border-zinc-500"
-            >
-              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-              </svg>
-            </button>
-
-            {/* Down button */}
-            <button
-              onClick={() => handleDirectionalClick('down')}
-              className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-zinc-800 dark:bg-zinc-700 hover:bg-zinc-700 dark:hover:bg-zinc-600 rounded-full transition-colors flex items-center justify-center border border-zinc-600 dark:border-zinc-500"
-            >
-              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </button>
-
-            {/* Left button */}
-            <button
-              onClick={() => handleDirectionalClick('left')}
-              className="absolute top-1/2 left-0 transform -translate-y-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-zinc-800 dark:bg-zinc-700 hover:bg-zinc-700 dark:hover:bg-zinc-600 rounded-full transition-colors flex items-center justify-center border border-zinc-600 dark:border-zinc-500"
-            >
-              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-              </svg>
-            </button>
-
-            {/* Center Select button */}
-            <button
-              onClick={() => handleDirectionalClick('select')}
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 sm:w-20 sm:h-20 bg-blue-500 hover:bg-blue-600 rounded-full transition-colors flex items-center justify-center border-2 border-blue-400"
-            >
-              <span className="text-white font-medium text-sm sm:text-base">Select</span>
-            </button>
+      {/* Now Playing Display */}
+      <div className="mb-4 p-3 bg-zinc-50 dark:bg-zinc-700 rounded-lg">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 bg-zinc-200 dark:bg-zinc-600 rounded-lg flex items-center justify-center">
+            <span className="text-zinc-500 dark:text-zinc-400 text-lg">🎬</span>
+          </div>
+          <div className="flex-1">
+            <div className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
+              Now Playing: The Mandalorian
+            </div>
+            <div className="text-xs text-zinc-500 dark:text-zinc-400">
+              Season 3, Episode 2
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Play/Pause Controls */}
-      <div className="flex gap-6 justify-center">
-        <button
-          onClick={() => handleMediaClick('play')}
-          className={`px-10 py-4 rounded-full transition-colors text-sm font-medium text-white ${
-            isPlaying ? 'bg-zinc-600 dark:bg-zinc-500' : 'bg-green-500 hover:bg-green-600'
-          }`}
-        >
-          Play
-        </button>
-        <button
-          onClick={() => handleMediaClick('pause')}
-          className={`px-10 py-4 rounded-full transition-colors text-sm font-medium text-white ${
-            !isPlaying ? 'bg-zinc-600 dark:bg-zinc-500' : 'bg-red-500 hover:bg-red-600'
-          }`}
-        >
-          Pause
-        </button>
+      {/* Two-Column Layout */}
+      <div className="mb-6 grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Left Column: Touchpad */}
+        <div className="flex flex-col h-full">
+          <div
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            className="w-full flex-1 min-h-[280px] rounded-xl bg-zinc-100 dark:bg-zinc-700 border-2 border-zinc-300 dark:border-zinc-500 flex items-center justify-center cursor-pointer transition-all duration-200 hover:bg-zinc-200 dark:hover:bg-zinc-600 hover:shadow-lg active:scale-95 active:shadow-xl"
+          >
+            <div className="text-center">
+              <div className="text-2xl text-zinc-400 dark:text-zinc-500 mb-2">⌚</div>
+              <div className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">
+                Touch to Navigate
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Controls Stack */}
+        <div className="flex flex-col gap-4">
+          {/* Control Buttons */}
+          <div className="flex flex-col gap-3">
+            <button
+              onClick={handleMenu}
+              className="w-full px-4 py-3 bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 rounded-lg transition-colors text-sm font-medium text-zinc-700 dark:text-zinc-300 border border-zinc-300 dark:border-zinc-500"
+            >
+              Menu
+            </button>
+            <button
+              onClick={handlePlayPause}
+              className="w-full px-4 py-3 bg-green-500 hover:bg-green-600 rounded-lg transition-colors text-sm font-medium text-white"
+            >
+              {isPlaying ? '⏸ Pause' : '▶ Play'}
+            </button>
+            <button
+              onClick={handleVoice}
+              className="w-full px-4 py-3 bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 rounded-lg transition-colors text-sm font-medium text-zinc-700 dark:text-zinc-300 border border-zinc-300 dark:border-zinc-500"
+            >
+              🎤 Voice Command
+            </button>
+          </div>
+
+          {/* Volume Control */}
+          <div className="flex flex-col gap-2">
+            <div className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Volume</div>
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => handleVolumeChange('down')}
+                className="p-2 bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 rounded-lg transition-colors border border-zinc-300 dark:border-zinc-500"
+              >
+                <span className="text-zinc-600 dark:text-zinc-400 text-sm">🔉</span>
+              </button>
+              <div className="flex-1">
+                <div className="w-full h-2 bg-zinc-200 dark:bg-zinc-600 rounded-full">
+                  <div 
+                    className="h-full bg-blue-500 rounded-full transition-all duration-200"
+                    style={{ width: `${volume}%` }}
+                  ></div>
+                </div>
+              </div>
+              <button
+                onClick={() => handleVolumeChange('up')}
+                className="p-2 bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 rounded-lg transition-colors border border-zinc-300 dark:border-zinc-500"
+              >
+                <span className="text-zinc-600 dark:text-zinc-400 text-sm">🔊</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* App Launcher Row */}
+      <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">
+        {apps.map((app) => (
+          <button
+            key={app.name}
+            onClick={() => handleAppLaunch(app.name)}
+            className={`p-3 rounded-lg transition-colors text-center ${app.color} hover:opacity-80 active:scale-95`}
+          >
+            <div className="text-lg mb-1">{app.icon}</div>
+            <div className="text-xs text-white font-medium truncate">{app.name}</div>
+          </button>
+        ))}
       </div>
     </div>
   );
