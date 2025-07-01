@@ -49,7 +49,7 @@ export default function AppleTVControlWidget() {
                   transformOrigin: '50% 50%'
                 }}
               >
-                <div className="absolute top-6 left-1/2 transform -translate-x-1/2 rotate-45deg">
+                <div className="absolute top-8 left-1/2 transform -translate-x-1/2 rotate-45deg">
                   <svg className="w-6 h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
                   </svg>
@@ -68,7 +68,7 @@ export default function AppleTVControlWidget() {
                   transformOrigin: '50% 50%'
                 }}
               >
-                <div className="absolute top-1/2 right-6 transform -translate-y-1/2 rotate-45deg">
+                <div className="absolute top-1/2 right-8 transform -translate-y-1/2 rotate-45deg">
                   <svg className="w-6 h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                   </svg>
@@ -87,7 +87,7 @@ export default function AppleTVControlWidget() {
                   transformOrigin: '50% 50%'
                 }}
               >
-                <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 rotate-135deg">
+                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 rotate-135deg">
                   <svg className="w-6 h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
                   </svg>
@@ -106,7 +106,7 @@ export default function AppleTVControlWidget() {
                   transformOrigin: '50% 50%'
                 }}
               >
-                <div className="absolute top-1/2 left-6 transform -translate-y-1/2 rotate-135deg">
+                <div className="absolute top-1/2 left-8 transform -translate-y-1/2 rotate-135deg">
                   <svg className="w-6 h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
