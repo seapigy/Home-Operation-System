@@ -3,6 +3,7 @@ import EnergyWidget from "./EnergyWidget";
 import WaterStatusWidget from "./WaterStatusWidget";
 import SceneButtons from "./SceneButtons";
 import TemperatureCard from "./TemperatureCard";
+import AppleTVControlWidget from "./AppleTVControlWidget";
 
 type WidgetType = {
   id: string;
@@ -136,6 +137,14 @@ const availableWidgets: WidgetType[] = [
         </div>
       </div>
     </div>
+  },
+  {
+    id: 'appletv-controls',
+    name: 'Apple TV',
+    description: 'Control Apple TV navigation and media playback',
+    icon: '🍎',
+    category: 'media',
+    component: <AppleTVControlWidget />
   }
 ];
 

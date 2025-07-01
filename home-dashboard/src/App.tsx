@@ -8,20 +8,9 @@ import BottomNavBar from "./components/BottomNavBar";
 export default function App() {
   const [activeRoom, setActiveRoom] = useState("Home");
   const [isEditMode, setIsEditMode] = useState(false);
-  const [shouldOpenWidgetLibrary, setShouldOpenWidgetLibrary] = useState(false);
 
   const handleToggleEditMode = () => {
     setIsEditMode(!isEditMode);
-  };
-
-  const handleAddWidget = () => {
-    if (isEditMode) {
-      setShouldOpenWidgetLibrary(true);
-    }
-  };
-
-  const handleWidgetLibraryOpened = () => {
-    setShouldOpenWidgetLibrary(false);
   };
 
   return (
@@ -33,9 +22,8 @@ export default function App() {
           activeRoom={activeRoom} 
           isEditMode={isEditMode} 
           onToggleEditMode={handleToggleEditMode}
-          onAddWidget={handleAddWidget}
-          shouldOpenWidgetLibrary={shouldOpenWidgetLibrary}
-          onWidgetLibraryOpened={handleWidgetLibraryOpened}
+          shouldOpenWidgetLibrary={false}
+          onWidgetLibraryOpened={() => {}}
         />
         <RightPanel />
       </div>
@@ -43,7 +31,6 @@ export default function App() {
         activeRoom={activeRoom} 
         isEditMode={isEditMode} 
         onToggleEditMode={handleToggleEditMode}
-        onAddWidget={handleAddWidget}
       />
     </div>
   );

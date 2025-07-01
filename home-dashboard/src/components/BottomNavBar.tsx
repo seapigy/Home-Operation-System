@@ -10,7 +10,6 @@ type BottomNavBarProps = {
   activeRoom: string;
   isEditMode: boolean;
   onToggleEditMode: () => void;
-  onAddWidget: () => void;
 };
 
 const navItems: NavItem[] = [
@@ -22,7 +21,7 @@ const navItems: NavItem[] = [
   { id: "profile", label: "Profile", icon: "👤" },
 ];
 
-export default function BottomNavBar({ activeRoom, isEditMode, onToggleEditMode, onAddWidget }: BottomNavBarProps) {
+export default function BottomNavBar({ activeRoom, isEditMode, onToggleEditMode }: BottomNavBarProps) {
   const [activeItem, setActiveItem] = useState("home");
 
   const handleNavClick = (itemId: string) => {
@@ -32,13 +31,12 @@ export default function BottomNavBar({ activeRoom, isEditMode, onToggleEditMode,
   };
 
   const showEditButton = activeRoom !== "Home";
-  const showAddWidgetButton = isEditMode;
 
   return (
     <nav className="lg:fixed lg:bottom-0 lg:left-0 lg:right-0 bg-white dark:bg-zinc-800 border-t border-zinc-300 dark:border-zinc-700 shadow-lg lg:shadow-xl z-50">
       <div className="px-2 sm:px-4 py-2 sm:py-3">
         <div className={`grid gap-1 sm:gap-2 ${
-          showEditButton || showAddWidgetButton ? 'grid-cols-7' : 'grid-cols-6'
+          showEditButton ? 'grid-cols-7' : 'grid-cols-6'
         }`}>
           {navItems.map((item) => (
             <button
@@ -57,20 +55,6 @@ export default function BottomNavBar({ activeRoom, isEditMode, onToggleEditMode,
               </span>
             </button>
           ))}
-          
-          {/* Add Widget Button - Only show in edit mode */}
-          {showAddWidgetButton && (
-            <button
-              onClick={onAddWidget}
-              className="flex flex-col items-center justify-center py-2 px-1 sm:px-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-800 bg-purple-600 text-white hover:bg-purple-700 font-semibold"
-              aria-label="Add Widget"
-            >
-              <span className="text-lg sm:text-xl mb-1">➕</span>
-              <span className="text-xs sm:text-sm font-medium truncate w-full text-center">
-                Add
-              </span>
-            </button>
-          )}
           
           {/* Edit/Done Button - Only show for specific rooms */}
           {showEditButton && (
