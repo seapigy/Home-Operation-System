@@ -2,13 +2,9 @@ import { useState } from "react";
 
 export default function AppleTVControlWidget() {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [activeDirection, setActiveDirection] = useState<string | null>(null);
 
   const handleDirectionalClick = (direction: string) => {
     console.log(`Apple TV: ${direction} button pressed`);
-    setActiveDirection(direction);
-    // Reset after a brief moment for visual feedback
-    setTimeout(() => setActiveDirection(null), 200);
   };
 
   const handleMediaClick = (action: string) => {
@@ -27,97 +23,55 @@ export default function AppleTVControlWidget() {
         Apple TV Controls
       </h3>
 
-      {/* Radial Control Ring */}
+      {/* Directional Controls */}
       <div className="mb-8 flex justify-center">
         <div className="relative">
-          {/* Outer ring container */}
-          <div className="relative w-64 h-64 sm:w-72 sm:h-72">
-            {/* Background ring */}
-            <div className="absolute inset-0 rounded-full bg-zinc-800 dark:bg-zinc-700 border-2 border-zinc-600 dark:border-zinc-500"></div>
-            
-            {/* Directional quadrants */}
-            <div className="absolute inset-0 rounded-full overflow-hidden">
-              {/* Up quadrant */}
-              <button
-                onClick={() => handleDirectionalClick('up')}
-                className={`absolute top-0 left-1/2 transform -translate-x-1/2 w-32 h-32 sm:w-36 sm:h-36 bg-zinc-700 dark:bg-zinc-600 hover:bg-zinc-600 dark:hover:bg-zinc-500 transition-all duration-200 ${
-                  activeDirection === 'up' ? 'bg-blue-500 dark:bg-blue-400' : ''
-                }`}
-                style={{
-                  clipPath: 'polygon(50% 0%, 100% 0%, 100% 100%, 50% 100%)',
-                  transform: 'translateX(-50%) rotate(-45deg)',
-                  transformOrigin: '50% 50%'
-                }}
-              >
-                <div className="absolute top-8 left-1/2 transform -translate-x-1/2 rotate-45deg">
-                  <svg className="w-6 h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              </button>
+          {/* Outer ring for directional buttons */}
+          <div className="relative w-48 h-48 sm:w-56 sm:h-56">
+            {/* Up button */}
+            <button
+              onClick={() => handleDirectionalClick('up')}
+              className="absolute top-0 left-1/2 transform -translate-x-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-zinc-800 dark:bg-zinc-700 hover:bg-zinc-700 dark:hover:bg-zinc-600 rounded-full transition-colors flex items-center justify-center border border-zinc-600 dark:border-zinc-500"
+            >
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
 
-              {/* Right quadrant */}
-              <button
-                onClick={() => handleDirectionalClick('right')}
-                className={`absolute top-1/2 right-0 transform -translate-y-1/2 w-32 h-32 sm:w-36 sm:h-36 bg-zinc-700 dark:bg-zinc-600 hover:bg-zinc-600 dark:hover:bg-zinc-500 transition-all duration-200 ${
-                  activeDirection === 'right' ? 'bg-blue-500 dark:bg-blue-400' : ''
-                }`}
-                style={{
-                  clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
-                  transform: 'translateY(-50%) rotate(45deg)',
-                  transformOrigin: '50% 50%'
-                }}
-              >
-                <div className="absolute top-1/2 right-8 transform -translate-y-1/2 rotate-45deg">
-                  <svg className="w-6 h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              </button>
+            {/* Right button */}
+            <button
+              onClick={() => handleDirectionalClick('right')}
+              className="absolute top-1/2 right-0 transform -translate-y-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-zinc-800 dark:bg-zinc-700 hover:bg-zinc-700 dark:hover:bg-zinc-600 rounded-full transition-colors flex items-center justify-center border border-zinc-600 dark:border-zinc-500"
+            >
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+              </svg>
+            </button>
 
-              {/* Down quadrant */}
-              <button
-                onClick={() => handleDirectionalClick('down')}
-                className={`absolute bottom-0 left-1/2 transform -translate-x-1/2 w-32 h-32 sm:w-36 sm:h-36 bg-zinc-700 dark:bg-zinc-600 hover:bg-zinc-600 dark:hover:bg-zinc-500 transition-all duration-200 ${
-                  activeDirection === 'down' ? 'bg-blue-500 dark:bg-blue-400' : ''
-                }`}
-                style={{
-                  clipPath: 'polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%)',
-                  transform: 'translateX(-50%) rotate(135deg)',
-                  transformOrigin: '50% 50%'
-                }}
-              >
-                <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 rotate-135deg">
-                  <svg className="w-6 h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              </button>
+            {/* Down button */}
+            <button
+              onClick={() => handleDirectionalClick('down')}
+              className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-zinc-800 dark:bg-zinc-700 hover:bg-zinc-700 dark:hover:bg-zinc-600 rounded-full transition-colors flex items-center justify-center border border-zinc-600 dark:border-zinc-500"
+            >
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
 
-              {/* Left quadrant */}
-              <button
-                onClick={() => handleDirectionalClick('left')}
-                className={`absolute top-1/2 left-0 transform -translate-y-1/2 w-32 h-32 sm:w-36 sm:h-36 bg-zinc-700 dark:bg-zinc-600 hover:bg-zinc-600 dark:hover:bg-zinc-500 transition-all duration-200 ${
-                  activeDirection === 'left' ? 'bg-blue-500 dark:bg-blue-400' : ''
-                }`}
-                style={{
-                  clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
-                  transform: 'translateY(-50%) rotate(-135deg)',
-                  transformOrigin: '50% 50%'
-                }}
-              >
-                <div className="absolute top-1/2 left-8 transform -translate-y-1/2 rotate-135deg">
-                  <svg className="w-6 h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-              </button>
-            </div>
+            {/* Left button */}
+            <button
+              onClick={() => handleDirectionalClick('left')}
+              className="absolute top-1/2 left-0 transform -translate-y-1/2 w-12 h-12 sm:w-14 sm:h-14 bg-zinc-800 dark:bg-zinc-700 hover:bg-zinc-700 dark:hover:bg-zinc-600 rounded-full transition-colors flex items-center justify-center border border-zinc-600 dark:border-zinc-500"
+            >
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-zinc-300 dark:text-zinc-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+              </svg>
+            </button>
 
             {/* Center Select button */}
             <button
               onClick={() => handleDirectionalClick('select')}
-              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 sm:w-24 sm:h-24 bg-blue-500 hover:bg-blue-600 rounded-full transition-colors flex items-center justify-center border-2 border-blue-400 shadow-lg"
+              className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 sm:w-20 sm:h-20 bg-blue-500 hover:bg-blue-600 rounded-full transition-colors flex items-center justify-center border-2 border-blue-400"
             >
               <span className="text-white font-medium text-sm sm:text-base">Select</span>
             </button>
