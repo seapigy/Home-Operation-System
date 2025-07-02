@@ -19,15 +19,15 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import EnergyWidget from "./EnergyWidget";
-import WaterStatusWidget from "./WaterStatusWidget";
 import SceneButtons from "./SceneButtons";
 import WidgetLibrary from "./WidgetLibrary";
 import AppleTVControlWidget from "./AppleTVControlWidget";
+import FloWaterWidget from "./FloWaterWidget";
 import { getRoomLayout, saveRoomLayout, type WidgetLayout } from "../utils/storage";
 
 type Widget = {
   id: string;
-  type: 'energy' | 'water' | 'scene' | 'temperature' | 'weather' | 'toggle' | 'media' | 'notes' | 'lighting' | 'security' | 'appletv';
+  type: 'energy' | 'scene' | 'temperature' | 'weather' | 'toggle' | 'media' | 'notes' | 'lighting' | 'security' | 'appletv' | 'flo';
   title: string;
   component: React.ReactNode;
 };
@@ -101,8 +101,6 @@ const createWidgetComponent = (widgetLayout: WidgetLayout): React.ReactNode => {
       return <SceneButtons />;
     case 'energy-widget':
       return <EnergyWidget />;
-    case 'water-widget':
-      return <WaterStatusWidget />;
     case 'temperature-card':
       return (
         <div className="bg-white dark:bg-zinc-800 rounded-xl shadow-md p-4 sm:p-6">
@@ -177,6 +175,8 @@ const createWidgetComponent = (widgetLayout: WidgetLayout): React.ReactNode => {
       );
     case 'appletv-controls':
       return <AppleTVControlWidget />;
+    case 'flo-widget':
+      return <FloWaterWidget />;
     default:
       return <div>Unknown widget: {widgetLayout.id}</div>;
   }
@@ -185,7 +185,6 @@ const createWidgetComponent = (widgetLayout: WidgetLayout): React.ReactNode => {
 export default function RoomEditor({ 
   activeRoom, 
   isEditMode, 
-  onToggleEditMode, 
   shouldOpenWidgetLibrary,
   onWidgetLibraryOpened
 }: RoomEditorProps) {

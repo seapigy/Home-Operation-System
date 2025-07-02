@@ -18,7 +18,7 @@ export default function RoomTabs({ activeRoom, setActiveRoom }: RoomTabsProps) {
 
   return (
     <div className="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-4 w-full">
-      <div className="flex gap-1 sm:gap-2 overflow-x-auto flex-nowrap w-full sm:w-auto pb-1 sm:pb-0">
+      <div className="flex gap-1 sm:gap-2 overflow-x-auto flex-nowrap w-full sm:w-auto pb-1 sm:pb-0 scrollable-widget">
         {rooms.map((room) => (
           <button
             key={room}

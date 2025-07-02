@@ -1,4 +1,3 @@
-import { useState } from "react";
 import RoomEditor from "./RoomEditor";
 
 type CenterPanelProps = {

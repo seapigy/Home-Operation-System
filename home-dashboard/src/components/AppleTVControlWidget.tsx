@@ -1,9 +1,9 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 export default function AppleTVControlWidget() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeDevice, setActiveDevice] = useState("Living Room");
-  const [volume, setVolume] = useState(50);
+  const [sonosVolume, setSonosVolume] = useState(75);
   const [touchStart, setTouchStart] = useState<{ x: number; y: number } | null>(null);
   const [isPoweredOn, setIsPoweredOn] = useState(true);
 
@@ -47,15 +47,7 @@ export default function AppleTVControlWidget() {
     console.log(isPlaying ? "Pause" : "Play");
   };
 
-  const handleVolumeChange = (direction: 'up' | 'down') => {
-    if (direction === 'up' && volume < 100) {
-      setVolume(volume + 10);
-      console.log("Volume Up");
-    } else if (direction === 'down' && volume > 0) {
-      setVolume(volume - 10);
-      console.log("Volume Down");
-    }
-  };
+
 
   const handleMenu = () => {
     console.log("Menu");
@@ -77,6 +69,16 @@ export default function AppleTVControlWidget() {
   const handlePowerToggle = () => {
     setIsPoweredOn(!isPoweredOn);
     console.log(`Apple TV ${isPoweredOn ? 'Off' : 'On'}`);
+  };
+
+  const handleSonosVolumeChange = (direction: 'up' | 'down') => {
+    if (direction === 'up' && sonosVolume < 100) {
+      setSonosVolume(sonosVolume + 10);
+      console.log("Sonos Volume Up");
+    } else if (direction === 'down' && sonosVolume > 0) {
+      setSonosVolume(sonosVolume - 10);
+      console.log("Sonos Volume Down");
+    }
   };
 
   const apps = [
@@ -188,21 +190,24 @@ export default function AppleTVControlWidget() {
             <div className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Volume</div>
             <div className="flex items-center gap-3">
               <button
-                onClick={() => handleVolumeChange('down')}
+                onClick={() => handleSonosVolumeChange('down')}
                 className="p-2 bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 rounded-lg transition-colors border border-zinc-300 dark:border-zinc-500"
               >
-                <span className="text-zinc-600 dark:text-zinc-400 text-sm">🔉</span>
+                <span className="text-zinc-600 dark:text-zinc-400 text-sm">🔇</span>
               </button>
-              <div className="flex-1">
+              <div className="flex-1 relative">
                 <div className="w-full h-2 bg-zinc-200 dark:bg-zinc-600 rounded-full">
                   <div 
-                    className="h-full bg-blue-500 rounded-full transition-all duration-200"
-                    style={{ width: `${volume}%` }}
+                    className="h-full bg-purple-500 rounded-full transition-all duration-200"
+                    style={{ width: `${sonosVolume}%` }}
                   ></div>
+                </div>
+                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 text-xs text-zinc-500 dark:text-zinc-400 bg-white dark:bg-zinc-800 px-1 rounded">
+                  {sonosVolume}%
                 </div>
               </div>
               <button
-                onClick={() => handleVolumeChange('up')}
+                onClick={() => handleSonosVolumeChange('up')}
                 className="p-2 bg-zinc-100 dark:bg-zinc-700 hover:bg-zinc-200 dark:hover:bg-zinc-600 rounded-lg transition-colors border border-zinc-300 dark:border-zinc-500"
               >
                 <span className="text-zinc-600 dark:text-zinc-400 text-sm">🔊</span>

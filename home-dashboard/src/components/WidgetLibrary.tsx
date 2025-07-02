@@ -1,6 +1,5 @@
 import { useState } from "react";
 import EnergyWidget from "./EnergyWidget";
-import WaterStatusWidget from "./WaterStatusWidget";
 import SceneButtons from "./SceneButtons";
 import TemperatureCard from "./TemperatureCard";
 import AppleTVControlWidget from "./AppleTVControlWidget";
@@ -29,14 +28,6 @@ const availableWidgets: WidgetType[] = [
     icon: '⚡',
     category: 'monitoring',
     component: <EnergyWidget />
-  },
-  {
-    id: 'water-widget',
-    name: 'Water Status',
-    description: 'Track water usage and leak detection',
-    icon: '💧',
-    category: 'monitoring',
-    component: <WaterStatusWidget />
   },
   {
     id: 'scene-buttons',
@@ -191,7 +182,7 @@ export default function WidgetLibrary({ isOpen, onClose, onAddWidget, existingWi
 
         {/* Category Filter */}
         <div className="p-4 sm:p-6 border-b border-zinc-200 dark:border-zinc-700">
-          <div className="flex gap-2 overflow-x-auto pb-2">
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollable-widget">
             <button
               onClick={() => setSelectedCategory('all')}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
@@ -219,7 +210,7 @@ export default function WidgetLibrary({ isOpen, onClose, onAddWidget, existingWi
         </div>
 
         {/* Widget List */}
-        <div className="overflow-y-auto max-h-[60vh] p-4 sm:p-6">
+        <div className="overflow-y-auto max-h-[60vh] p-4 sm:p-6 scrollable-widget">
           {availableWidgetsToShow.length === 0 ? (
             <div className="text-center py-8">
               <div className="text-zinc-400 dark:text-zinc-500 mb-4">

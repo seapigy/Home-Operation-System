@@ -1,58 +1,57 @@
 import { useState } from "react";
 
-const MOCK_LOCATION = "San Francisco, CA";
-const MOCK_DATE = "Tue, Jun 11";
-const MOCK_DAY = true; // Toggle for day/night
-
-// Mock 7-day forecast data
-const MOCK_FORECAST = [
-  { day: "Mon", icon: "☀️", high: 75, low: 62, condition: "Sunny" },
-  { day: "Tue", icon: "⛅", high: 72, low: 58, condition: "Partly Cloudy" },
-  { day: "Wed", icon: "🌧️", high: 68, low: 55, condition: "Rainy" },
-  { day: "Thu", icon: "☁️", high: 70, low: 57, condition: "Cloudy" },
-  { day: "Fri", icon: "☀️", high: 78, low: 63, condition: "Sunny" },
-  { day: "Sat", icon: "⛅", high: 76, low: 61, condition: "Partly Cloudy" },
-  { day: "Sun", icon: "☀️", high: 80, low: 65, condition: "Sunny" },
-];
-
 export default function WeatherWidget() {
   const [view, setView] = useState<'day' | 'week'>('day');
-  const isDay = MOCK_DAY;
 
-  // Placeholder data
   const current = {
     temp: 72,
-    condition: isDay ? "Cloudless" : "Clear Night",
-    icon: isDay ? "☀️" : "🌙",
-    summary: isDay
-      ? "Clear skies and warm. Great day for outdoor activities!"
-      : "Clear and calm night. Perfect for stargazing.",
+    condition: "Partly Cloudy",
+    icon: "⛅",
+    summary: "Clear skies and warm. Great day for outdoor activities!"
   };
 
+  const dailyTrend = [
+    { time: "Morning", temp: 68, icon: "☀️", condition: "Sunny" },
+    { time: "Midday", temp: 72, icon: "⛅", condition: "Partly Cloudy" },
+    { time: "Afternoon", temp: 70, icon: "🌧️", condition: "Light Rain" },
+    { time: "Evening", temp: 66, icon: "🌥️", condition: "Cloudy" },
+    { time: "Night", temp: 62, icon: "🌙", condition: "Clear" }
+  ];
+
+  const forecast = [
+    { day: "Mon", icon: "☀️", high: 75, low: 62 },
+    { day: "Tue", icon: "⛅", high: 72, low: 58 },
+    { day: "Wed", icon: "🌧️", high: 68, low: 55 },
+    { day: "Thu", icon: "☁️", high: 70, low: 57 },
+    { day: "Fri", icon: "☀️", high: 78, low: 63 },
+    { day: "Sat", icon: "⛅", high: 76, low: 61 },
+    { day: "Sun", icon: "☀️", high: 80, low: 65 }
+  ];
+
   return (
-    <div className="bg-white dark:bg-zinc-800 rounded-2xl shadow-lg p-4 sm:p-6 space-y-4 w-full max-w-full">
-      {/* Top section: icon, location, toggles */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-4">
-        <div className="flex items-center gap-2 sm:gap-3">
-          <span className="text-2xl sm:text-3xl">{current.icon}</span>
-          <span className="text-base sm:text-lg font-semibold text-zinc-700 dark:text-zinc-200">{MOCK_LOCATION}</span>
+    <div className="bg-white dark:bg-zinc-800 rounded-xl shadow-md p-4 sm:p-6">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">🌤️</span>
+          <span className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">Weather</span>
         </div>
-        <div className="flex gap-1 mt-2 sm:mt-0">
+        <div className="flex gap-1">
           <button
-            className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ${
+            className={`px-2 py-1 text-xs rounded transition-colors ${
               view === 'day' 
-                ? 'bg-blue-600 text-white shadow-md' 
-                : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-600'
+                ? 'bg-blue-600 text-white' 
+                : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-400'
             }`}
             onClick={() => setView('day')}
           >
-            Day
+            Today
           </button>
           <button
-            className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition-all duration-200 ${
+            className={`px-2 py-1 text-xs rounded transition-colors ${
               view === 'week' 
-                ? 'bg-blue-600 text-white shadow-md' 
-                : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-300 dark:hover:bg-zinc-600'
+                ? 'bg-blue-600 text-white' 
+                : 'bg-zinc-200 dark:bg-zinc-700 text-zinc-600 dark:text-zinc-400'
             }`}
             onClick={() => setView('week')}
           >
@@ -62,52 +61,55 @@ export default function WeatherWidget() {
       </div>
 
       {view === 'day' ? (
-        <>
-          {/* Current date, temp, condition */}
-          <div className="flex flex-col items-center text-center space-y-1">
-            <div className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">{MOCK_DATE}</div>
-            <div className="text-4xl sm:text-5xl font-bold text-zinc-900 dark:text-white">{current.temp}&deg;F</div>
-            <div className="text-base sm:text-lg font-medium text-zinc-600 dark:text-zinc-300">{current.condition}</div>
+        <div className="space-y-4">
+          {/* Current Weather */}
+          <div className="text-center">
+            <div className="text-4xl font-bold text-zinc-800 dark:text-zinc-200 mb-2">
+              {current.temp}°F
+            </div>
+            <div className="text-lg text-zinc-600 dark:text-zinc-400 mb-2">
+              {current.condition}
+            </div>
+            <div className="text-sm text-zinc-500 dark:text-zinc-400">
+              {current.summary}
+            </div>
           </div>
 
-          {/* Large sun/moon icon */}
-          <div className="flex justify-center items-center">
-            <span className="text-7xl sm:text-8xl select-none">
-              {isDay ? "☀️" : "🌙"}
-            </span>
-          </div>
-
-          {/* Weather summary */}
-          <div className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 text-center px-2">
-            {current.summary}
-          </div>
-        </>
-      ) : (
-        <>
-          {/* Current date and temp for week view */}
-          <div className="flex flex-col items-center text-center space-y-1">
-            <div className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">{MOCK_DATE}</div>
-            <div className="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-white">{current.temp}&deg;F</div>
-            <div className="text-sm sm:text-base font-medium text-zinc-600 dark:text-zinc-300">{current.condition}</div>
-          </div>
-
-          {/* 7-Day Forecast */}
-          <div className="space-y-3">
-            <h4 className="text-sm sm:text-base font-semibold text-zinc-700 dark:text-zinc-200 text-center">
-              7-Day Forecast
-            </h4>
-            <div className="grid grid-cols-7 gap-2">
-              {MOCK_FORECAST.map((day, index) => (
-                <div key={index} className="flex flex-col items-center space-y-1 p-2 rounded-lg bg-zinc-50 dark:bg-zinc-700/50">
-                  <div className="text-xs font-medium text-zinc-600 dark:text-zinc-300">{day.day}</div>
-                  <div className="text-lg sm:text-xl">{day.icon}</div>
-                  <div className="text-xs font-semibold text-zinc-900 dark:text-white">{day.high}&deg;</div>
-                  <div className="text-xs text-zinc-500 dark:text-zinc-400">{day.low}&deg;</div>
+          {/* Daily Trend */}
+          <div className="border-t border-zinc-200 dark:border-zinc-700 pt-3">
+            <div className="text-xs font-medium text-zinc-600 dark:text-zinc-400 mb-3 text-center">
+              Today's Trend
+            </div>
+            <div className="flex justify-between items-center">
+              {dailyTrend.map((period, index) => (
+                <div key={index} className="flex flex-col items-center space-y-1">
+                  <div className="text-xs text-zinc-500 dark:text-zinc-400">
+                    {period.time}
+                  </div>
+                  <div className="text-lg transition-all duration-300 hover:scale-110">
+                    {period.icon}
+                  </div>
+                  <div className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+                    {period.temp}°
+                  </div>
                 </div>
               ))}
             </div>
           </div>
-        </>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          <div className="grid grid-cols-7 gap-2">
+            {forecast.map((day, index) => (
+              <div key={index} className="text-center">
+                <div className="text-xs text-zinc-600 dark:text-zinc-400 mb-1">{day.day}</div>
+                <div className="text-lg mb-1">{day.icon}</div>
+                <div className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{day.high}°</div>
+                <div className="text-xs text-zinc-500 dark:text-zinc-400">{day.low}°</div>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   );

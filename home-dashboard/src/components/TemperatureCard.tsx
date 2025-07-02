@@ -13,7 +13,6 @@ export default function TemperatureCard({
   roomName,
   currentTemp,
   targetTemp,
-  mode: initialMode,
   humidity,
 }: TemperatureCardProps) {
   const [temp, setTemp] = useState(targetTemp);

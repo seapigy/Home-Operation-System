@@ -1,6 +1,6 @@
 export type WidgetLayout = {
   id: string;
-  type: 'energy' | 'water' | 'scene' | 'temperature' | 'weather' | 'toggle' | 'media' | 'notes' | 'lighting' | 'security' | 'appletv';
+  type: 'energy' | 'scene' | 'temperature' | 'weather' | 'toggle' | 'media' | 'notes' | 'lighting' | 'security' | 'appletv' | 'flo';
   title: string;
   visible: boolean;
   order: number;
@@ -33,9 +33,9 @@ export const getDefaultLayout = (roomName: string): WidgetLayout[] => {
         order: 1
       },
       {
-        id: 'water-widget',
-        type: 'water',
-        title: 'Water Status',
+        id: 'flo-widget',
+        type: 'flo',
+        title: 'Flo by Moen',
         visible: true,
         order: 2
       }
@@ -48,13 +48,6 @@ export const getDefaultLayout = (roomName: string): WidgetLayout[] => {
         title: 'Energy Usage',
         visible: true,
         order: 0
-      },
-      {
-        id: 'water-widget',
-        type: 'water',
-        title: 'Water Status',
-        visible: true,
-        order: 1
       }
     ];
   }
@@ -86,8 +79,21 @@ export const getRoomLayout = (roomName: string): WidgetLayout[] => {
     const roomLayout = allLayouts[roomName];
     
     if (roomLayout && roomLayout.widgets) {
+      // Filter out any water-widget entries that might still exist in old data
+      const filteredWidgets = roomLayout.widgets.filter(widget => widget.id !== 'water-widget');
+      
+      // If we filtered out water-widget, save the cleaned layout
+      if (filteredWidgets.length !== roomLayout.widgets.length) {
+        const cleanedLayout = {
+          ...roomLayout,
+          widgets: filteredWidgets.map((widget, index) => ({ ...widget, order: index }))
+        };
+        saveRoomLayout(roomName, cleanedLayout.widgets);
+        return cleanedLayout.widgets.sort((a, b) => a.order - b.order);
+      }
+      
       // Sort widgets by order
-      return roomLayout.widgets.sort((a, b) => a.order - b.order);
+      return filteredWidgets.sort((a, b) => a.order - b.order);
     }
     
     // Return default layout if no saved layout exists

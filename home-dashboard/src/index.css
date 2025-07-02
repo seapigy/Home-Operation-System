@@ -4,4 +4,49 @@
 
 html, body {
   @apply bg-white text-black dark:bg-zinc-900 dark:text-white transition-colors;
+}
+
+/* Custom scrollbar styles for modern, minimal appearance */
+.custom-scrollbar::-webkit-scrollbar,
+.scrollable-widget::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track,
+.scrollable-widget::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb,
+.scrollable-widget::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.4);
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover,
+.scrollable-widget::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(156, 163, 175, 0.6);
+}
+
+/* Dark mode scrollbar */
+.dark .custom-scrollbar::-webkit-scrollbar-thumb,
+.dark .scrollable-widget::-webkit-scrollbar-thumb {
+  background-color: rgba(212, 212, 216, 0.3);
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover,
+.dark .scrollable-widget::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(212, 212, 216, 0.5);
+}
+
+/* Hide scrollbar on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .custom-scrollbar::-webkit-scrollbar,
+  .scrollable-widget::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+  }
 } 
