@@ -1,4 +1,4 @@
-import { useState } from "react";
+import type { Dispatch, SetStateAction } from "react";
 
 type NavItem = {
   id: string;
@@ -7,9 +7,11 @@ type NavItem = {
 };
 
 type BottomNavBarProps = {
-  activeRoom: string;
   isEditMode: boolean;
   onToggleEditMode: () => void;
+  onOpenWidgetLibrary: () => void;
+  mainTab: string;
+  setMainTab: Dispatch<SetStateAction<string>>;
 };
 
 const navItems: NavItem[] = [
@@ -21,16 +23,19 @@ const navItems: NavItem[] = [
   { id: "profile", label: "Profile", icon: "👤" },
 ];
 
-export default function BottomNavBar({ activeRoom, isEditMode, onToggleEditMode }: BottomNavBarProps) {
-  const [activeItem, setActiveItem] = useState("home");
-
+export default function BottomNavBar({ isEditMode, onToggleEditMode, onOpenWidgetLibrary, mainTab, setMainTab }: BottomNavBarProps) {
   const handleNavClick = (itemId: string) => {
-    setActiveItem(itemId);
-    // TODO: Handle navigation logic here
-    console.log(`Navigated to: ${itemId}`);
+    setMainTab(itemId);
+    if (itemId === "widgets") {
+      onOpenWidgetLibrary();
+    } else {
+      // TODO: Handle other navigation logic here
+      console.log(`Navigated to: ${itemId}`);
+    }
   };
 
-  const showEditButton = activeRoom !== "Home";
+  // Show Edit button for all rooms including Home
+  const showEditButton = true;
 
   return (
     <nav className="lg:fixed lg:bottom-0 lg:left-0 lg:right-0 bg-white dark:bg-zinc-800 border-t border-zinc-300 dark:border-zinc-700 shadow-lg lg:shadow-xl z-50">
@@ -43,7 +48,7 @@ export default function BottomNavBar({ activeRoom, isEditMode, onToggleEditMode 
               key={item.id}
               onClick={() => handleNavClick(item.id)}
               className={`flex flex-col items-center justify-center py-2 px-1 sm:px-2 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-800 ${
-                activeItem === item.id
+                mainTab === item.id
                   ? "bg-zinc-200 dark:bg-zinc-600 text-zinc-800 dark:text-zinc-200 font-semibold"
                   : "text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-700/50"
               }`}
@@ -56,7 +61,7 @@ export default function BottomNavBar({ activeRoom, isEditMode, onToggleEditMode 
             </button>
           ))}
           
-          {/* Edit/Done Button - Only show for specific rooms */}
+          {/* Edit/Done Button - Show for all rooms including Home */}
           {showEditButton && (
             <button
               onClick={onToggleEditMode}

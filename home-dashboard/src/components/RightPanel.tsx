@@ -1,7 +1,7 @@
 import WeatherWidget from "./WeatherWidget";
 import ToggleCard from "./ToggleCard";
 
-export default function RightPanel() {
+export default function RightPanel({ activeRoom = "Home" }: { activeRoom?: string }) {
   // Handler functions for future device integrations
   const handleWiFiToggle = (isOn: boolean) => {
     console.log(`Wi-Fi ${isOn ? 'enabled' : 'disabled'}`);
@@ -18,43 +18,49 @@ export default function RightPanel() {
     // TODO: Integrate with Alarm.com API
   };
 
-  const handleMusicToggle = (isOn: boolean) => {
-    console.log(`Music ${isOn ? 'started' : 'stopped'}`);
-    // TODO: Integrate with Sonos Control API
-  };
+  // Only show toggles for rooms other than Home
+  const showToggles = activeRoom !== "Home";
 
   return (
     <div className="w-full lg:w-1/5 p-3 sm:p-4 lg:border-l lg:border-zinc-300 lg:dark:border-zinc-700 space-y-3 sm:space-y-4">
       <WeatherWidget />
-      
-      <ToggleCard 
-        title="Wi-Fi" 
-        icon="📶" 
-        initialState={true}
-        onToggle={handleWiFiToggle}
-        isWiFi={true}
-      />
-      
-      <ToggleCard 
-        title="TV" 
-        icon="📺" 
-        initialState={false}
-        onToggle={handleTVToggle}
-      />
-      
-      <ToggleCard 
-        title="Alarm" 
-        icon="🚨" 
-        initialState={false}
-        onToggle={handleAlarmToggle}
-      />
-      
-      <ToggleCard 
-        title="Music" 
-        icon="🎵" 
-        initialState={false}
-        onToggle={handleMusicToggle}
-      />
+      {showToggles ? (
+        <>
+          <ToggleCard 
+            title="Wi-Fi" 
+            icon="📶" 
+            initialState={true}
+            onToggle={handleWiFiToggle}
+            isWiFi={true}
+          />
+          <ToggleCard 
+            title="TV" 
+            icon="📺" 
+            initialState={false}
+            onToggle={handleTVToggle}
+          />
+          <ToggleCard 
+            title="Alarm" 
+            icon="🚨" 
+            initialState={false}
+            onToggle={handleAlarmToggle}
+          />
+          <ToggleCard 
+            title="Music" 
+            icon="🎵" 
+            initialState={false}
+            onToggle={() => {}}
+          />
+        </>
+      ) : (
+        // On Home, show the simple Music toggle
+        <ToggleCard 
+          title="Music" 
+          icon="🎵" 
+          initialState={false}
+          onToggle={() => {}}
+        />
+      )}
     </div>
   );
 } 

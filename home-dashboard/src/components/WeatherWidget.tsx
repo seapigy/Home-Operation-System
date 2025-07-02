@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function WeatherWidget() {
   const [view, setView] = useState<'day' | 'week'>('day');
+  const [animateTrend, setAnimateTrend] = useState(false);
+  const [tappedIndex, setTappedIndex] = useState<number | null>(null);
 
   const current = {
     temp: 72,
@@ -11,11 +13,30 @@ export default function WeatherWidget() {
   };
 
   const dailyTrend = [
-    { time: "Morning", temp: 68, icon: "☀️", condition: "Sunny" },
-    { time: "Midday", temp: 72, icon: "⛅", condition: "Partly Cloudy" },
-    { time: "Afternoon", temp: 70, icon: "🌧️", condition: "Light Rain" },
-    { time: "Evening", temp: 66, icon: "🌥️", condition: "Cloudy" },
-    { time: "Night", temp: 62, icon: "🌙", condition: "Clear" }
+    { time: "Morning", temp: 68, icon: "☀️", condition: "Sunny", color: "text-yellow-500" },
+    { time: "Midday", temp: 72, icon: "⛅", condition: "Partly Cloudy", color: "text-blue-400" },
+    { time: "Afternoon", temp: 70, icon: "🌧️", condition: "Light Rain", color: "text-blue-600" },
+    { time: "Evening", temp: 66, icon: "🌥️", condition: "Cloudy", color: "text-gray-500" },
+    { time: "Night", temp: 62, icon: "🌙", condition: "Clear", color: "text-indigo-400" }
+  ];
+
+  const weatherAlerts = [
+    { 
+      type: "uv", 
+      message: "High UV Index", 
+      icon: "☀️", 
+      time: "2h ago", 
+      color: "bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800",
+      textColor: "text-orange-700 dark:text-orange-300"
+    },
+    { 
+      type: "rain", 
+      message: "Heavy rain expected at 3 PM", 
+      icon: "🌧️", 
+      time: "1h ago", 
+      color: "bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800",
+      textColor: "text-blue-700 dark:text-blue-300"
+    }
   ];
 
   const forecast = [
@@ -27,6 +48,20 @@ export default function WeatherWidget() {
     { day: "Sat", icon: "⛅", high: 76, low: 61 },
     { day: "Sun", icon: "☀️", high: 80, low: 65 }
   ];
+
+  // Trigger animation when switching to day view
+  useEffect(() => {
+    if (view === 'day') {
+      setAnimateTrend(false);
+      setTimeout(() => setAnimateTrend(true), 100);
+    }
+  }, [view]);
+
+  // Handle tap effect
+  function handleTap(index: number) {
+    setTappedIndex(index);
+    setTimeout(() => setTappedIndex(null), 180);
+  }
 
   return (
     <div className="bg-white dark:bg-zinc-800 rounded-xl shadow-md p-4 sm:p-6">
@@ -75,27 +110,81 @@ export default function WeatherWidget() {
             </div>
           </div>
 
-          {/* Daily Trend */}
+          {/* Touch-optimized Animated Daily Trend */}
           <div className="border-t border-zinc-200 dark:border-zinc-700 pt-3">
             <div className="text-xs font-medium text-zinc-600 dark:text-zinc-400 mb-3 text-center">
               Today's Trend
             </div>
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-end space-x-1">
               {dailyTrend.map((period, index) => (
-                <div key={index} className="flex flex-col items-center space-y-1">
-                  <div className="text-xs text-zinc-500 dark:text-zinc-400">
+                <button
+                  key={index}
+                  className={`flex flex-col items-center space-y-2 flex-1 transition-all duration-700 ease-out focus:outline-none active:outline-none bg-transparent ${
+                    animateTrend 
+                      ? 'opacity-100 translate-y-0' 
+                      : 'opacity-0 translate-y-4'
+                  } ${
+                    tappedIndex === index ? 'scale-105 shadow-md' : ''
+                  }`}
+                  style={{ transitionDelay: `${index * 150}ms` }}
+                  tabIndex={0}
+                  onTouchStart={() => handleTap(index)}
+                  onClick={() => handleTap(index)}
+                >
+                  {/* Time Label */}
+                  <div className="text-xs text-zinc-500 dark:text-zinc-400 font-medium">
                     {period.time}
                   </div>
-                  <div className="text-lg transition-all duration-300 hover:scale-110">
-                    {period.icon}
+                  {/* Animated Weather Icon (fade/slide in) */}
+                  <div
+                    className={`text-xl ${period.color} transition-all duration-700 ease-out
+                      ${animateTrend ? 'opacity-100 scale-100 translate-y-0' : 'opacity-0 scale-90 translate-y-2'}`}
+                    style={{ transitionDelay: `${index * 180 + 100}ms` }}
+                  >
+                    <span>{period.icon}</span>
                   </div>
-                  <div className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+                  {/* Temperature with fade-in */}
+                  <div className={`text-sm font-semibold text-zinc-800 dark:text-zinc-200 transition-all duration-500 ${
+                    animateTrend ? 'opacity-100' : 'opacity-0'
+                  }`} style={{ transitionDelay: `${index * 180 + 200}ms` }}>
                     {period.temp}°
                   </div>
-                </div>
+                </button>
               ))}
             </div>
           </div>
+
+          {/* Weather Alerts */}
+          {weatherAlerts.length > 0 && (
+            <div className="border-t border-zinc-200 dark:border-zinc-700 pt-3">
+              <div className="text-xs font-medium text-zinc-600 dark:text-zinc-400 mb-2 text-center">
+                Weather Alerts
+              </div>
+              <div className="space-y-2">
+                {weatherAlerts.map((alert, index) => (
+                  <div
+                    key={index}
+                    className={`p-3 rounded-lg border transition-all duration-500 ease-out ${
+                      animateTrend ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+                    } ${alert.color}`}
+                    style={{ transitionDelay: `${index * 200 + 800}ms` }}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm">{alert.icon}</span>
+                        <span className={`text-sm font-medium ${alert.textColor}`}>
+                          {alert.message}
+                        </span>
+                      </div>
+                      <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                        {alert.time}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         <div className="space-y-3">

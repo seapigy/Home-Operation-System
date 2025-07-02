@@ -3,6 +3,7 @@ import EnergyWidget from "./EnergyWidget";
 import SceneButtons from "./SceneButtons";
 import TemperatureCard from "./TemperatureCard";
 import AppleTVControlWidget from "./AppleTVControlWidget";
+import MusicControlWidget from "./MusicControlWidget";
 
 type WidgetType = {
   id: string;
@@ -136,6 +137,14 @@ const availableWidgets: WidgetType[] = [
     icon: '🍎',
     category: 'media',
     component: <AppleTVControlWidget />
+  },
+  {
+    id: 'music-control',
+    name: 'Music Control',
+    description: 'Control music playback and volume',
+    icon: '🎵',
+    category: 'media',
+    component: <MusicControlWidget />
   }
 ];
 
