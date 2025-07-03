@@ -24,9 +24,9 @@ export default function App() {
     <div className="min-h-screen flex flex-col bg-white dark:bg-zinc-900 text-black dark:text-white transition-colors">
       <TopNavBar activeRoom={activeRoom} setActiveRoom={setActiveRoom} />
       <div className="flex flex-col lg:flex-row flex-1 overflow-hidden lg:pb-20">
-        <LeftPanel activeRoom={activeRoom} />
         {mainTab === "home" ? (
           <>
+            <LeftPanel activeRoom={activeRoom} />
             <CenterPanel 
               activeRoom={activeRoom} 
               isEditMode={isEditMode} 
