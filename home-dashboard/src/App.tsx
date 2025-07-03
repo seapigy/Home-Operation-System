@@ -5,6 +5,11 @@ import CenterPanel from "./components/CenterPanel";
 import RightPanel from "./components/RightPanel";
 import BottomNavBar from "./components/BottomNavBar";
 import MusicControlWidget from "./components/MusicControlWidget";
+import SystemAlerts from "./components/SystemAlerts";
+import MacroButtons from "./components/MacroButtons";
+import SystemStatusPanel from "./components/SystemStatusPanel";
+import NotificationCenter from "./components/NotificationCenter";
+import DeviceSettings from "./components/DeviceSettings";
 
 export default function App() {
   const [activeRoom, setActiveRoom] = useState("Home");
@@ -42,6 +47,11 @@ export default function App() {
             <MusicControlWidget />
           </div>
         )}
+        {mainTab === "settings" && (
+          <div className="flex-1 w-full h-full p-6 overflow-y-auto">
+            <DeviceSettings />
+          </div>
+        )}
       </div>
       <BottomNavBar 
         isEditMode={isEditMode} 
@@ -50,6 +60,13 @@ export default function App() {
         mainTab={mainTab}
         setMainTab={setMainTab}
       />
+
+      {/* Floating Components */}
+      <SystemAlerts />
+      <SystemStatusPanel />
+      <div className="fixed top-4 left-4 z-40">
+        <NotificationCenter />
+      </div>
     </div>
   );
 }

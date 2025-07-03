@@ -16,7 +16,7 @@ type BottomNavBarProps = {
 
 const navItems: NavItem[] = [
   { id: "home", label: "Home", icon: "🏠" },
-  { id: "widgets", label: "Widgets", icon: "⚙️" },
+  { id: "settings", label: "Settings", icon: "⚙️" },
   { id: "electricity", label: "Electricity", icon: "⚡" },
   { id: "player", label: "Player", icon: "🎵" },
   { id: "bills", label: "Bills", icon: "💰" },
@@ -26,8 +26,9 @@ const navItems: NavItem[] = [
 export default function BottomNavBar({ isEditMode, onToggleEditMode, onOpenWidgetLibrary, mainTab, setMainTab }: BottomNavBarProps) {
   const handleNavClick = (itemId: string) => {
     setMainTab(itemId);
-    if (itemId === "widgets") {
-      onOpenWidgetLibrary();
+    if (itemId === "settings") {
+      // Settings tab - no special handling needed
+      console.log(`Navigated to: ${itemId}`);
     } else {
       // TODO: Handle other navigation logic here
       console.log(`Navigated to: ${itemId}`);

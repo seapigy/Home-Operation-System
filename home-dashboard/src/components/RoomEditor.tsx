@@ -23,6 +23,7 @@ import SceneButtons from "./SceneButtons";
 import WidgetLibrary from "./WidgetLibrary";
 import AppleTVControlWidget from "./AppleTVControlWidget";
 import FloWaterWidget from "./FloWaterWidget";
+import MacroButtons from "./MacroButtons";
 import { getRoomLayout, saveRoomLayout, type WidgetLayout } from "../utils/storage";
 
 type Widget = {
@@ -177,6 +178,8 @@ const createWidgetComponent = (widgetLayout: WidgetLayout): React.ReactNode => {
       return <AppleTVControlWidget />;
     case 'flo-widget':
       return <FloWaterWidget />;
+    case 'macro-buttons':
+      return <MacroButtons />;
     default:
       return <div>Unknown widget: {widgetLayout.id}</div>;
   }
