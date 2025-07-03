@@ -29,21 +29,27 @@ export default function App() {
   return (
     <div className="h-screen flex flex-col bg-white dark:bg-zinc-900 text-black dark:text-white transition-colors">
       <TopNavBar activeRoom={activeRoom} setActiveRoom={setActiveRoom} />
-      <div className="flex flex-col lg:flex-row flex-1 overflow-hidden lg:pb-20 h-full">
+      <div className="flex flex-col lg:flex-row flex-1 overflow-hidden h-full">
         {mainTab === "home" ? (
           <>
-            <LeftPanel 
-              activeRoom={activeRoom} 
-              isEditMode={isEditMode} 
-            />
-            <CenterPanel 
-              activeRoom={activeRoom} 
-              isEditMode={isEditMode} 
-              onToggleEditMode={handleToggleEditMode}
-              shouldOpenWidgetLibrary={shouldOpenWidgetLibrary}
-              onWidgetLibraryOpened={handleWidgetLibraryOpened}
-            />
-            <RightPanel activeRoom={activeRoom} />
+            <div className="flex flex-col h-full w-full lg:w-1/4 lg:min-w-[280px] lg:max-w-sm">
+              <LeftPanel 
+                activeRoom={activeRoom} 
+                isEditMode={isEditMode} 
+              />
+            </div>
+            <div className="flex flex-col h-full flex-1 min-w-0">
+              <CenterPanel 
+                activeRoom={activeRoom} 
+                isEditMode={isEditMode} 
+                onToggleEditMode={handleToggleEditMode}
+                shouldOpenWidgetLibrary={shouldOpenWidgetLibrary}
+                onWidgetLibraryOpened={handleWidgetLibraryOpened}
+              />
+            </div>
+            <div className="flex flex-col h-full w-full lg:w-1/4 lg:min-w-[280px] lg:max-w-sm">
+              <RightPanel activeRoom={activeRoom} />
+            </div>
           </>
         ) : null}
         {mainTab === "player" && (

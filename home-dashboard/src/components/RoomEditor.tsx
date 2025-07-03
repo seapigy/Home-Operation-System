@@ -333,83 +333,85 @@ export default function RoomEditor({
 
   return (
     <>
-      <div className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8">
-        {/* Header with Room Title */}
-        <div className="mb-4 sm:mb-6">
-          <h2 className="text-base sm:text-lg font-semibold text-zinc-800 dark:text-zinc-200">
-            {activeRoom === "Home" ? "Main Widgets" : `${activeRoom} Widgets`}
-          </h2>
-        </div>
+      <div className="flex-1 h-full overflow-y-auto">
+        <div className="p-3 sm:p-4 md:p-6 lg:p-8">
+          {/* Header with Room Title */}
+          <div className="mb-4 sm:mb-6">
+            <h2 className="text-base sm:text-lg font-semibold text-zinc-800 dark:text-zinc-200">
+              {activeRoom === "Home" ? "Main Widgets" : `${activeRoom} Widgets`}
+            </h2>
+          </div>
 
-        {/* Edit Mode Instructions */}
-        {isEditMode && (
-          <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
-            <div className="flex items-center gap-2 text-sm text-blue-800 dark:text-blue-200">
-              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-              </svg>
-              <span>Drag widgets to rearrange, click X to remove, or use the Add Widget button to add new widgets</span>
+          {/* Edit Mode Instructions */}
+          {isEditMode && (
+            <div className="mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+              <div className="flex items-center gap-2 text-sm text-blue-800 dark:text-blue-200">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                </svg>
+                <span>Drag widgets to rearrange, click X to remove, or use the Add Widget button to add new widgets</span>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Add Widget Button - Only show in edit mode */}
-        {isEditMode && (
-          <div className="mb-4">
-            <button
-              onClick={handleOpenWidgetLibrary}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-800 font-medium text-sm sm:text-base"
-            >
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-              </svg>
-              <span>Add Widget</span>
-            </button>
-          </div>
-        )}
+          {/* Add Widget Button - Only show in edit mode */}
+          {isEditMode && (
+            <div className="mb-4">
+              <button
+                onClick={handleOpenWidgetLibrary}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-800 font-medium text-sm sm:text-base"
+              >
+                <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                </svg>
+                <span>Add Widget</span>
+              </button>
+            </div>
+          )}
 
-        {/* Widgets Container */}
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-        >
-          <SortableContext
-            items={widgets.map((widget) => widget.id)}
-            strategy={verticalListSortingStrategy}
+          {/* Widgets Container */}
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
           >
-            <div className="space-y-4 sm:space-y-6">
-              {widgets.map((widget) => (
-                <SortableWidget
-                  key={widget.id}
-                  widget={widget}
-                  isEditMode={isEditMode}
-                  onRemove={handleRemoveWidget}
-                />
-              ))}
-            </div>
-          </SortableContext>
-        </DndContext>
+            <SortableContext
+              items={widgets.map((widget) => widget.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="space-y-4 sm:space-y-6">
+                {widgets.map((widget) => (
+                  <SortableWidget
+                    key={widget.id}
+                    widget={widget}
+                    isEditMode={isEditMode}
+                    onRemove={handleRemoveWidget}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
 
-        {/* Empty State */}
-        {widgets.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-zinc-400 dark:text-zinc-500 mb-4">
-              <svg className="w-16 h-16 mx-auto" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" clipRule="evenodd" />
-              </svg>
+          {/* Empty State */}
+          {widgets.length === 0 && (
+            <div className="text-center py-12">
+              <div className="text-zinc-400 dark:text-zinc-500 mb-4">
+                <svg className="w-16 h-16 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z" clipRule="evenodd" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-zinc-600 dark:text-zinc-400 mb-2">
+                No widgets configured
+              </h3>
+              <p className="text-sm text-zinc-500 dark:text-zinc-500">
+                {isEditMode 
+                  ? 'Use the Add Widget button to add widgets to this room'
+                  : 'Enable edit mode to add widgets'
+                }
+              </p>
             </div>
-            <h3 className="text-lg font-medium text-zinc-600 dark:text-zinc-400 mb-2">
-              No widgets configured
-            </h3>
-            <p className="text-sm text-zinc-500 dark:text-zinc-500">
-              {isEditMode 
-                ? 'Use the Add Widget button to add widgets to this room'
-                : 'Enable edit mode to add widgets'
-              }
-            </p>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
       {/* Widget Library Modal */}

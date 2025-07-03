@@ -264,7 +264,7 @@ export default function LeftPanel({ activeRoom, isEditMode }: LeftPanelProps) {
   const widgetsToShow = getEcobeeWidgetsToShow();
 
   return (
-    <div className="w-full lg:w-1/5 lg:border-r lg:border-zinc-300 lg:dark:border-zinc-700 flex flex-col h-full">
+    <div className="w-full lg:border-r lg:border-zinc-300 lg:dark:border-zinc-700 flex flex-col h-full">
       {/* Fixed Header */}
       <div className="flex-shrink-0 p-3 sm:p-4 pb-2">
         <div className="flex items-center justify-between">
@@ -284,7 +284,8 @@ export default function LeftPanel({ activeRoom, isEditMode }: LeftPanelProps) {
       </div>
       
       {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto px-3 sm:px-4 pb-3 sm:pb-4 custom-scrollbar left-panel-scroll">
+      <div className="flex-1 overflow-y-auto custom-scrollbar left-panel-scroll">
+        <div className="px-3 sm:px-4 pb-3 sm:pb-4">
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -329,9 +330,8 @@ export default function LeftPanel({ activeRoom, isEditMode }: LeftPanelProps) {
             )}
           </div>
         )}
+        </div>
       </div>
-
-
     </div>
   );
 } 

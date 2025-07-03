@@ -801,9 +801,9 @@ export default function MusicControlWidget() {
                       <div className="text-xs text-zinc-500 dark:text-zinc-500">
                         {device.room} • {device.type}
                       </div>
-                    </div>
-                  </div>
-                  
+          </div>
+        </div>
+
                   <div className="flex items-center gap-2">
                     {/* Status indicator */}
                     <div className={`w-2 h-2 rounded-full ${
@@ -813,8 +813,8 @@ export default function MusicControlWidget() {
                   </div>
                 </div>
               ))}
-            </div>
-            
+        </div>
+
             <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-700 space-y-2">
               <button
                 onClick={() => setShowAddDevice(true)}
