@@ -146,7 +146,10 @@ export default function MusicControlWidget() {
   const [showSignInModal, setShowSignInModal] = useState(false);
   const [signInApp, setSignInApp] = useState("");
   const [showDevicePicker, setShowDevicePicker] = useState(false);
-  const [selectedDevice, setSelectedDevice] = useState("Sonos"); // Default output device
+  const [showAddDevice, setShowAddDevice] = useState(false);
+  const [selectedDevices, setSelectedDevices] = useState<string[]>(["Sonos"]); // Multiple device support
+  const [defaultDevice, setDefaultDevice] = useState("Sonos");
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
 
   const currentAppData = mockData[selectedApp as keyof typeof mockData];
   const nowPlaying = currentAppData.nowPlaying;
@@ -192,22 +195,165 @@ export default function MusicControlWidget() {
     setSignInApp("");
   };
 
-  // Mock output devices
+  // Enhanced mock output devices
   const outputDevices = [
-    { id: "sonos", name: "Sonos", type: "Speaker", isDefault: true },
-    { id: "living-room-tv", name: "Living Room TV", type: "Apple TV" },
-    { id: "bluetooth-speaker", name: "Bluetooth Speaker", type: "Bluetooth" },
-    { id: "office-airplay", name: "Office AirPlay", type: "AirPlay" },
-    { id: "kitchen-speaker", name: "Kitchen Speaker", type: "HomePod" }
+    { 
+      id: "sonos", 
+      name: "Sonos", 
+      type: "Wi-Fi", 
+      room: "Living Room", 
+      status: "connected",
+      icon: "🔊"
+    },
+    { 
+      id: "living-room-tv", 
+      name: "Living Room TV", 
+      type: "Wi-Fi", 
+      room: "Living Room", 
+      status: "available",
+      icon: "📺"
+    },
+    { 
+      id: "bluetooth-speaker", 
+      name: "Bluetooth Speaker", 
+      type: "Bluetooth", 
+      room: "Office", 
+      status: "connected",
+      icon: "🔊"
+    },
+    { 
+      id: "office-airplay", 
+      name: "Office AirPlay", 
+      type: "Wi-Fi", 
+      room: "Office", 
+      status: "available",
+      icon: "📱"
+    },
+    { 
+      id: "kitchen-speaker", 
+      name: "Kitchen Speaker", 
+      type: "Wi-Fi", 
+      room: "Kitchen", 
+      status: "offline",
+      icon: "🔊"
+    },
+    { 
+      id: "bedroom-tv", 
+      name: "Bedroom TV", 
+      type: "Wi-Fi", 
+      room: "Bedroom", 
+      status: "available",
+      icon: "📺"
+    }
   ];
 
-  const handleDeviceSelect = (deviceId: string) => {
+  // Mock discovered devices for "Add Device" functionality
+  const discoveredDevices = [
+    { 
+      id: "new-bluetooth-1", 
+      name: "JBL Flip 6", 
+      type: "Bluetooth", 
+      icon: "🔊"
+    },
+    { 
+      id: "new-wifi-1", 
+      name: "Google Nest Audio", 
+      type: "Wi-Fi", 
+      icon: "🔊"
+    },
+    { 
+      id: "new-bluetooth-2", 
+      name: "Bose SoundLink", 
+      type: "Bluetooth", 
+      icon: "🔊"
+    }
+  ];
+
+  const handleDeviceToggle = (deviceId: string) => {
+    setSelectedDevices(prev => {
+      if (prev.includes(deviceId)) {
+        return prev.filter(id => id !== deviceId);
+      } else {
+        return [...prev, deviceId];
+      }
+    });
+  };
+
+  const handleSetDefault = (deviceId: string) => {
     const device = outputDevices.find(d => d.id === deviceId);
     if (device) {
-      setSelectedDevice(device.name);
-      setShowDevicePicker(false);
-      console.log(`Switched to output device: ${device.name}`);
+      setDefaultDevice(device.name);
+      console.log(`Set default device: ${device.name}`);
     }
+  };
+
+  const handleAddDevice = (deviceId: string) => {
+    const device = discoveredDevices.find(d => d.id === deviceId);
+    if (device) {
+      // In real implementation, this would add the device to the user's list
+      console.log(`Added device: ${device.name}`);
+      setShowAddDevice(false);
+    }
+  };
+
+  const getSelectedDeviceNames = () => {
+    return selectedDevices.map(id => {
+      const device = outputDevices.find(d => d.id === id);
+      return device?.name || id;
+    });
+  };
+
+  // Mock search results
+  const mockSearchResults = {
+    songs: [
+      { id: 1, title: "Electric Feel", artist: "MGMT", cover: "⚡", genre: "Indie" },
+      { id: 2, title: "Midnight City", artist: "M83", cover: "🌃", genre: "Electronic" },
+      { id: 3, title: "Blinding Lights", artist: "The Weeknd", cover: "💡", genre: "Pop" },
+      { id: 4, title: "Levitating", artist: "Dua Lipa", cover: "✨", genre: "Pop" }
+    ],
+    artists: [
+      { id: 1, name: "MGMT", cover: "🎸", genre: "Indie" },
+      { id: 2, name: "The Weeknd", cover: "🎤", genre: "Pop" },
+      { id: 3, name: "Dua Lipa", cover: "🎵", genre: "Pop" }
+    ],
+    playlists: [
+      { id: 1, name: "Chill Vibes", tracks: 45, cover: "🌊", genre: "Lo-fi" },
+      { id: 2, name: "Workout Mix", tracks: 32, cover: "💪", genre: "Workout" },
+      { id: 3, name: "Jazz Classics", tracks: 28, cover: "🎷", genre: "Jazz" }
+    ]
+  };
+
+  // Mock genre filters
+  const genreFilters = ["All", "Pop", "Lo-fi", "Jazz", "Workout", "Relax", "Focus", "Electronic"];
+
+  // Filter playlists by selected genre
+  const getFilteredPlaylists = () => {
+    if (!selectedGenre || selectedGenre === "All") {
+      return (currentAppData as any).playlists || [];
+    }
+    return (currentAppData as any).playlists?.filter((playlist: any) => 
+      playlist.genre === selectedGenre
+    ) || [];
+  };
+
+  // Get search results based on query
+  const getSearchResults = () => {
+    if (!searchQuery.trim()) return null;
+    
+    const query = searchQuery.toLowerCase();
+    const results = {
+      songs: mockSearchResults.songs.filter(song => 
+        song.title.toLowerCase().includes(query) || song.artist.toLowerCase().includes(query)
+      ),
+      artists: mockSearchResults.artists.filter(artist => 
+        artist.name.toLowerCase().includes(query)
+      ),
+      playlists: mockSearchResults.playlists.filter(playlist => 
+        playlist.name.toLowerCase().includes(query) || playlist.genre.toLowerCase().includes(query)
+      )
+    };
+
+    return results;
   };
 
   const renderAppContent = () => {
@@ -218,18 +364,104 @@ export default function MusicControlWidget() {
           <SearchIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 text-zinc-400 w-5 h-5" />
           <input
             type="text"
-            placeholder="Search songs, artists, or albums..."
+            placeholder={`Search ${selectedApp.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}...`}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-12 pr-4 py-3 bg-zinc-100 dark:bg-zinc-800 rounded-xl border-0 focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
         </div>
 
-        {/* Content based on selected app */}
-        <div>
+        {/* Recently Played Row */}
+        {!searchQuery.trim() && selectedApp === "appleMusic" && (
+          <div className="space-y-3">
+            <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200">Recently Played</h3>
+            <div className="flex gap-3 overflow-x-auto pb-2">
+              {(currentAppData as any).recentlyPlayed?.map((item: any, index: number) => (
+                <div key={index} className="flex-shrink-0 w-32 p-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg">
+                  <div className="w-full aspect-square bg-gradient-to-br from-purple-400 to-pink-400 rounded-lg flex items-center justify-center mb-2">
+                    <span className="text-2xl">{item.cover}</span>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-sm font-medium text-zinc-800 dark:text-zinc-200 truncate">{item.title}</div>
+                    <div className="text-xs text-zinc-600 dark:text-zinc-400 truncate">{item.artist}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Search Results */}
+        {getSearchResults() && (
+          <div className="space-y-4">
+            {Object.entries(getSearchResults()!).map(([type, items]) => {
+              if (items.length === 0) return null;
+              
+              return (
+                <div key={type} className="space-y-3">
+                  <h3 className="text-lg font-semibold text-zinc-800 dark:text-zinc-200 capitalize">
+                    {type} ({items.length})
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {items.map((item: any) => (
+                      <div key={item.id} className="flex items-center p-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg">
+                        <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-400 rounded-lg flex items-center justify-center mr-4">
+                          <span className="text-2xl">{item.cover}</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium truncate">
+                            {type === 'songs' ? item.title : type === 'artists' ? item.name : item.name}
+                          </div>
+                          <div className="text-sm text-zinc-600 dark:text-zinc-400 truncate">
+                            {type === 'songs' ? item.artist : type === 'artists' ? item.genre : `${item.tracks} tracks`}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Empty Search State */}
+        {searchQuery.trim() && getSearchResults() && 
+         Object.values(getSearchResults()!).every(arr => arr.length === 0) && (
+          <div className="text-center py-8">
+            <div className="text-4xl mb-4">🔍</div>
+            <h3 className="text-lg font-medium text-zinc-800 dark:text-zinc-200 mb-2">No results found</h3>
+            <p className="text-zinc-600 dark:text-zinc-400">Try searching for something else</p>
+          </div>
+        )}
+
+        {/* Genre Filters */}
+        {!searchQuery.trim() && selectedApp === "spotify" && (
+          <div className="space-y-3">
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {genreFilters.map((genre) => (
+                <button
+                  key={genre}
+                  onClick={() => setSelectedGenre(genre === "All" ? null : genre)}
+                  className={`flex-shrink-0 px-4 py-2 rounded-full font-medium transition-all duration-200 ${
+                    (selectedGenre === genre) || (!selectedGenre && genre === "All")
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 active:bg-zinc-200 dark:active:bg-zinc-700'
+                  }`}
+                >
+                  {genre}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Main Content based on selected app */}
+        {!searchQuery.trim() && (
+          <div className="space-y-4">
           {selectedApp === "appleMusic" && (
             <div>
-              <h3 className="text-lg font-semibold mb-4">Recently Played</h3>
+              <h3 className="text-lg font-semibold mb-4 text-zinc-800 dark:text-zinc-200">Recommended for You</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {(currentAppData as any).recentlyPlayed?.map((item: any, index: number) => (
                   <div key={index} className="flex items-center p-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg">
@@ -248,7 +480,7 @@ export default function MusicControlWidget() {
 
           {selectedApp === "pandora" && (
             <div>
-              <h3 className="text-lg font-semibold mb-4">Your Stations</h3>
+              <h3 className="text-lg font-semibold mb-4 text-zinc-800 dark:text-zinc-200">Your Stations</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {(currentAppData as any).stations?.map((station: any, index: number) => (
                   <div key={index} className="flex items-center p-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg">
@@ -267,9 +499,11 @@ export default function MusicControlWidget() {
 
           {selectedApp === "spotify" && (
             <div>
-              <h3 className="text-lg font-semibold mb-4">Your Playlists</h3>
+              <h3 className="text-lg font-semibold mb-4 text-zinc-800 dark:text-zinc-200">
+                {selectedGenre ? `${selectedGenre} Playlists` : 'Your Playlists'}
+              </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {(currentAppData as any).playlists?.map((playlist: any, index: number) => (
+                {getFilteredPlaylists().map((playlist: any, index: number) => (
                   <div key={index} className="flex items-center p-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg">
                     <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-400 rounded-lg flex items-center justify-center mr-4">
                       <span className="text-2xl">🎵</span>
@@ -286,7 +520,7 @@ export default function MusicControlWidget() {
 
           {selectedApp === "local" && (
             <div>
-              <h3 className="text-lg font-semibold mb-4">Local Library</h3>
+              <h3 className="text-lg font-semibold mb-4 text-zinc-800 dark:text-zinc-200">Local Library</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {(currentAppData as any).folders?.map((folder: any, index: number) => (
                   <div key={index} className="flex items-center p-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg">
@@ -305,7 +539,7 @@ export default function MusicControlWidget() {
 
           {selectedApp === "airplay" && (
             <div>
-              <h3 className="text-lg font-semibold mb-4">Available Devices</h3>
+              <h3 className="text-lg font-semibold mb-4 text-zinc-800 dark:text-zinc-200">Available Devices</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {(currentAppData as any).devices?.map((device: any, index: number) => (
                   <div key={index} className="flex items-center p-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg">
@@ -322,6 +556,7 @@ export default function MusicControlWidget() {
             </div>
           )}
         </div>
+        )}
       </div>
     );
   };
@@ -430,6 +665,20 @@ export default function MusicControlWidget() {
                   <NextIcon className="w-6 h-6 sm:w-7 sm:h-7" />
                 </button>
               </div>
+
+              {/* Playing To Label */}
+              <div className="mt-6 text-center">
+                <button
+                  onClick={() => setShowDevicePicker(true)}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-50 dark:bg-zinc-800 rounded-full border border-zinc-200 dark:border-zinc-700 transition-colors"
+                >
+                  <span className="text-sm text-zinc-600 dark:text-zinc-400">Playing to:</span>
+                  <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                    {getSelectedDeviceNames().join(", ")}
+                  </span>
+                  <span className="text-zinc-400 dark:text-zinc-500">▼</span>
+                </button>
+              </div>
             </div>
 
             {/* Right Column: Volume and Device Controls */}
@@ -470,7 +719,7 @@ export default function MusicControlWidget() {
                     <span className="text-lg">📡</span>
                     <div className="text-left">
                       <div className="text-sm font-medium text-zinc-700 dark:text-zinc-300">Playing To</div>
-                      <div className="text-xs text-zinc-500 dark:text-zinc-500">{selectedDevice}</div>
+                      <div className="text-xs text-zinc-500 dark:text-zinc-500">{getSelectedDeviceNames().join(", ")}</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -559,45 +808,123 @@ export default function MusicControlWidget() {
         </div>
       )}
 
-      {/* Output Device Picker Modal */}
+      {/* Enhanced Output Device Picker Modal */}
       {showDevicePicker && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-zinc-800 rounded-2xl p-6 max-w-md w-full max-h-[80vh] flex flex-col">
+            <div className="mb-4">
+              <h3 className="text-xl font-bold text-center mb-2">Select Output Device</h3>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400 text-center">
+                Choose one or more devices to play music
+              </p>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto space-y-2">
+              {outputDevices.map((device) => (
+                <div
+                  key={device.id}
+                  className="flex items-center justify-between p-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg"
+                >
+                  <div className="flex items-center gap-3 flex-1">
+                    <button
+                      onClick={() => handleDeviceToggle(device.id)}
+                      className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
+                        selectedDevices.includes(device.id)
+                          ? 'bg-blue-600 border-blue-600'
+                          : 'border-zinc-300 dark:border-zinc-600'
+                      }`}
+                    >
+                      {selectedDevices.includes(device.id) && (
+                        <span className="text-white text-xs">✓</span>
+                      )}
+                    </button>
+                    
+                    <span className="text-lg">{device.icon}</span>
+                    
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-zinc-700 dark:text-zinc-300 truncate">{device.name}</div>
+                      <div className="text-xs text-zinc-500 dark:text-zinc-500">
+                        {device.room} • {device.type}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    {/* Status indicator */}
+                    <div className={`w-2 h-2 rounded-full ${
+                      device.status === 'connected' ? 'bg-green-500' :
+                      device.status === 'available' ? 'bg-blue-500' : 'bg-red-500'
+                    }`}></div>
+                    
+                    {/* Default device star */}
+                    <button
+                      onClick={() => handleSetDefault(device.id)}
+                      className={`text-lg transition-colors ${
+                        defaultDevice === device.name ? 'text-yellow-500' : 'text-zinc-400 dark:text-zinc-500'
+                      }`}
+                    >
+                      ⭐
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-700 space-y-2">
+              <button
+                onClick={() => setShowAddDevice(true)}
+                className="w-full px-4 py-2 bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg font-medium transition-colors"
+              >
+                + Add Device
+              </button>
+              <button
+                onClick={() => setShowDevicePicker(false)}
+                className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg font-medium transition-colors"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Device Modal */}
+      {showAddDevice && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-zinc-800 rounded-2xl p-6 max-w-sm w-full">
             <div className="mb-4">
-              <h3 className="text-xl font-bold text-center mb-2">Choose Output Device</h3>
+              <h3 className="text-xl font-bold text-center mb-2">Add New Device</h3>
               <p className="text-sm text-zinc-600 dark:text-zinc-400 text-center">
-                Select where you want to play music
+                Discovered devices on your network
               </p>
             </div>
             
             <div className="space-y-2 max-h-64 overflow-y-auto">
-              {outputDevices.map((device) => (
-                <button
+              {discoveredDevices.map((device) => (
+                <div
                   key={device.id}
-                  onClick={() => handleDeviceSelect(device.id)}
-                  className={`w-full flex items-center justify-between p-3 rounded-lg transition-colors ${
-                    selectedDevice === device.name
-                      ? 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700'
-                      : 'bg-zinc-50 dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700'
-                  }`}
+                  className="flex items-center justify-between p-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="text-lg">📡</span>
+                    <span className="text-lg">{device.icon}</span>
                     <div className="text-left">
                       <div className="font-medium text-zinc-700 dark:text-zinc-300">{device.name}</div>
                       <div className="text-xs text-zinc-500 dark:text-zinc-500">{device.type}</div>
                     </div>
                   </div>
-                  {selectedDevice === device.name && (
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  )}
-                </button>
+                  <button
+                    onClick={() => handleAddDevice(device.id)}
+                    className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm font-medium transition-colors"
+                  >
+                    Add
+                  </button>
+                </div>
               ))}
             </div>
             
             <div className="mt-6 pt-4 border-t border-zinc-200 dark:border-zinc-700">
               <button
-                onClick={() => setShowDevicePicker(false)}
+                onClick={() => setShowAddDevice(false)}
                 className="w-full px-4 py-2 bg-zinc-100 dark:bg-zinc-700 text-zinc-700 dark:text-zinc-300 rounded-lg font-medium transition-colors"
               >
                 Cancel
