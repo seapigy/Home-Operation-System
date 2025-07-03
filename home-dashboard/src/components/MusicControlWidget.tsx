@@ -491,43 +491,43 @@ export default function MusicControlWidget() {
               {/* Song Info - Compact on iPad */}
               <div className="text-center mb-4 lg:mb-6">
                 <h1 className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-bold text-zinc-800 dark:text-zinc-200 mb-1 lg:mb-2">
-                  {nowPlaying.title}
-                </h1>
+            {nowPlaying.title}
+          </h1>
                 <p className="text-base sm:text-lg lg:text-xl xl:text-2xl text-zinc-600 dark:text-zinc-400">
-                  {nowPlaying.artist}
-                </p>
-              </div>
+            {nowPlaying.artist}
+          </p>
+        </div>
 
               {/* Playback Controls - Compact on iPad */}
               <div className="flex items-center justify-center gap-4 sm:gap-6 lg:gap-8 xl:gap-10">
-                <button
-                  onClick={handlePrevious}
+          <button
+            onClick={handlePrevious}
                   className="p-2.5 sm:p-3 lg:p-4 rounded-full border-2 border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 transition-all duration-200 active:scale-90"
-                  aria-label="Previous"
-                >
+            aria-label="Previous"
+          >
                   <PrevIcon className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7" />
-                </button>
+          </button>
 
-                <button
-                  onClick={handlePlayPause}
+          <button
+            onClick={handlePlayPause}
                   className="p-3 sm:p-4 lg:p-5 xl:p-6 rounded-full bg-blue-600 text-white transition-all duration-200 active:scale-95"
-                  aria-label={isPlaying ? "Pause" : "Play"}
-                >
-                  {isPlaying ? (
+            aria-label={isPlaying ? "Pause" : "Play"}
+          >
+            {isPlaying ? (
                     <PauseIcon className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 xl:w-12 xl:h-12" />
-                  ) : (
+            ) : (
                     <PlayIcon className="w-6 h-6 sm:w-8 sm:h-8 lg:w-10 lg:h-10 xl:w-12 xl:h-12" />
-                  )}
-                </button>
+            )}
+          </button>
 
-                <button
-                  onClick={handleNext}
+          <button
+            onClick={handleNext}
                   className="p-2.5 sm:p-3 lg:p-4 rounded-full border-2 border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900 text-zinc-600 dark:text-zinc-300 transition-all duration-200 active:scale-90"
-                  aria-label="Next"
-                >
+            aria-label="Next"
+          >
                   <NextIcon className="w-5 h-5 sm:w-6 sm:h-6 lg:w-7 lg:h-7" />
-                </button>
-              </div>
+          </button>
+        </div>
 
               {/* Playing To Label - Compact on iPad */}
               <div className="mt-4 lg:mt-6 text-center">
@@ -547,28 +547,28 @@ export default function MusicControlWidget() {
             {/* Right Column: Volume and Device Controls - Compact on iPad */}
             <div className="flex-shrink-0 w-full lg:w-72 xl:w-80 p-4 lg:p-6 border-t lg:border-t-0 lg:border-l border-zinc-200 dark:border-zinc-700">
               <div className="space-y-4 lg:space-y-6">
-                {/* Volume Control */}
+        {/* Volume Control */}
                 <div className="space-y-2 lg:space-y-3">
-                  <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between">
                     <span className="text-xs lg:text-sm font-medium text-zinc-600 dark:text-zinc-400">Volume</span>
                     <span className="text-xs lg:text-sm text-zinc-500 dark:text-zinc-500">{volume}%</span>
-                  </div>
-                  
+          </div>
+          
                   <div className="flex items-center gap-2 lg:gap-3">
                     <span className="text-base lg:text-lg text-zinc-500 dark:text-zinc-500">🔇</span>
-                    <div className="flex-1 relative">
-                      <input
-                        type="range"
-                        min="0"
-                        max="100"
-                        value={volume}
-                        onChange={handleVolumeChange}
+            <div className="flex-1 relative">
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={volume}
+                onChange={handleVolumeChange}
                         className="w-full h-2 bg-zinc-200 dark:bg-zinc-600 rounded-lg appearance-none cursor-pointer"
-                        style={{
-                          background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${volume}%, #e5e7eb ${volume}%, #e5e7eb 100%)`
-                        }}
-                      />
-                    </div>
+                style={{
+                  background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${volume}%, #e5e7eb ${volume}%, #e5e7eb 100%)`
+                }}
+              />
+            </div>
                     <span className="text-base lg:text-lg text-zinc-500 dark:text-zinc-500">🔊</span>
                   </div>
                 </div>
@@ -875,8 +875,8 @@ export default function MusicControlWidget() {
                 Cancel
               </button>
             </div>
-          </div>
         </div>
+      </div>
       )}
     </div>
   );

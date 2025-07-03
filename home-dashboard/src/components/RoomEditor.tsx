@@ -26,6 +26,8 @@ import FloWaterWidget from "./FloWaterWidget";
 import MacroButtons from "./MacroButtons";
 import { getRoomLayout, saveRoomLayout, type WidgetLayout } from "../utils/storage";
 
+
+
 type Widget = {
   id: string;
   type: 'energy' | 'scene' | 'temperature' | 'weather' | 'toggle' | 'media' | 'notes' | 'lighting' | 'security' | 'appletv' | 'flo';
@@ -207,7 +209,13 @@ export default function RoomEditor({
           title: widgetLayout.title,
           component: createWidgetComponent(widgetLayout)
         }));
-        setWidgets(widgetComponents);
+        
+        // Filter out Ecobee widgets from center panel on Home page
+        const filteredWidgets = activeRoom === "Home" 
+          ? widgetComponents.filter(widget => widget.id !== 'ecobee-widget')
+          : widgetComponents;
+        
+        setWidgets(filteredWidgets);
       } catch (error) {
         console.error('Failed to load widgets:', error);
         // Fallback to default widgets
@@ -218,7 +226,13 @@ export default function RoomEditor({
           title: widgetLayout.title,
           component: createWidgetComponent(widgetLayout)
         }));
-        setWidgets(defaultWidgets);
+        
+        // Filter out Ecobee widgets from center panel on Home page
+        const filteredDefaultWidgets = activeRoom === "Home" 
+          ? defaultWidgets.filter(widget => widget.id !== 'ecobee-widget')
+          : defaultWidgets;
+        
+        setWidgets(filteredDefaultWidgets);
       } finally {
         setIsLoading(false);
       }
@@ -266,6 +280,18 @@ export default function RoomEditor({
   };
 
   const handleAddWidget = (widgetData: any) => {
+    console.log('Adding widget:', widgetData.id, 'on room:', activeRoom);
+    
+    // If this is an Ecobee widget and we're on the Home page, route it to left panel
+    if (widgetData.id === 'ecobee-widget' && activeRoom === "Home") {
+      console.log('Routing Ecobee widget to left panel');
+      // Dispatch custom event for LeftPanel to handle
+      window.dispatchEvent(new CustomEvent('ecobee-widget-add', {
+        detail: { widgetId: widgetData.id }
+      }));
+      return;
+    }
+    
     const newWidget: Widget = {
       id: widgetData.id,
       type: widgetData.id.replace('-widget', '').replace('-', '') as any,

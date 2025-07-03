@@ -17,6 +17,7 @@ export default function App() {
   const [shouldOpenWidgetLibrary, setShouldOpenWidgetLibrary] = useState(false);
   const [mainTab, setMainTab] = useState("home");
 
+
   const handleToggleEditMode = () => {
     setIsEditMode(!isEditMode);
   };
@@ -26,12 +27,15 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-zinc-900 text-black dark:text-white transition-colors">
+    <div className="h-screen flex flex-col bg-white dark:bg-zinc-900 text-black dark:text-white transition-colors">
       <TopNavBar activeRoom={activeRoom} setActiveRoom={setActiveRoom} />
-      <div className="flex flex-col lg:flex-row flex-1 overflow-hidden lg:pb-20">
+      <div className="flex flex-col lg:flex-row flex-1 overflow-hidden lg:pb-20 h-full">
         {mainTab === "home" ? (
           <>
-            <LeftPanel activeRoom={activeRoom} />
+            <LeftPanel 
+              activeRoom={activeRoom} 
+              isEditMode={isEditMode} 
+            />
             <CenterPanel 
               activeRoom={activeRoom} 
               isEditMode={isEditMode} 

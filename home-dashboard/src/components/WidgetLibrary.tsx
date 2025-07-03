@@ -39,9 +39,9 @@ const availableWidgets: WidgetType[] = [
     component: <SceneButtons />
   },
   {
-    id: 'temperature-card',
-    name: 'Temperature',
-    description: 'Control thermostat and view temperature',
+    id: 'ecobee-widget',
+    name: 'Ecobee',
+    description: 'Control Ecobee thermostat and view temperature',
     icon: '🌡️',
     category: 'control',
     component: <TemperatureCard 
@@ -164,7 +164,10 @@ export default function WidgetLibrary({ isOpen, onClose, onAddWidget, existingWi
     ? availableWidgets 
     : availableWidgets.filter(widget => widget.category === selectedCategory);
 
-  const availableWidgetsToShow = filteredWidgets.filter(widget => !existingWidgetIds.includes(widget.id));
+  // Show all widgets - no limit on Ecobee widgets
+  const availableWidgetsToShow = filteredWidgets.filter(widget => {
+    return !existingWidgetIds.includes(widget.id);
+  });
 
   const handleAddWidget = (widget: WidgetType) => {
     onAddWidget(widget);
