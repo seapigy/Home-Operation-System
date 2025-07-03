@@ -19,8 +19,6 @@ const navItems: NavItem[] = [
   { id: "settings", label: "Settings", icon: "⚙️" },
   { id: "electricity", label: "Electricity", icon: "⚡" },
   { id: "player", label: "Player", icon: "🎵" },
-  { id: "bills", label: "Bills", icon: "💰" },
-  { id: "profile", label: "Profile", icon: "👤" },
 ];
 
 export default function BottomNavBar({ isEditMode, onToggleEditMode, onOpenWidgetLibrary, mainTab, setMainTab }: BottomNavBarProps) {
@@ -42,7 +40,7 @@ export default function BottomNavBar({ isEditMode, onToggleEditMode, onOpenWidge
     <nav className="lg:fixed lg:bottom-0 lg:left-0 lg:right-0 bg-white dark:bg-zinc-800 border-t border-zinc-300 dark:border-zinc-700 shadow-lg lg:shadow-xl z-50">
       <div className="px-2 sm:px-4 py-2 sm:py-3">
         <div className={`grid gap-1 sm:gap-2 ${
-          showEditButton ? 'grid-cols-7' : 'grid-cols-6'
+          showEditButton ? 'grid-cols-5' : 'grid-cols-4'
         }`}>
           {navItems.map((item) => (
             <button
