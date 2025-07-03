@@ -147,8 +147,7 @@ export default function MusicControlWidget() {
   const [signInApp, setSignInApp] = useState("");
   const [showDevicePicker, setShowDevicePicker] = useState(false);
   const [showAddDevice, setShowAddDevice] = useState(false);
-  const [selectedDevices, setSelectedDevices] = useState<string[]>(["Sonos"]); // Multiple device support
-  const [defaultDevice, setDefaultDevice] = useState("Sonos");
+  const [selectedDevices, setSelectedDevices] = useState<string[]>(["sonos"]); // Multiple device support
   const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
 
   const currentAppData = mockData[selectedApp as keyof typeof mockData];
@@ -279,13 +278,7 @@ export default function MusicControlWidget() {
     });
   };
 
-  const handleSetDefault = (deviceId: string) => {
-    const device = outputDevices.find(d => d.id === deviceId);
-    if (device) {
-      setDefaultDevice(device.name);
-      console.log(`Set default device: ${device.name}`);
-    }
-  };
+
 
   const handleAddDevice = (deviceId: string) => {
     const device = discoveredDevices.find(d => d.id === deviceId);
@@ -855,16 +848,6 @@ export default function MusicControlWidget() {
                       device.status === 'connected' ? 'bg-green-500' :
                       device.status === 'available' ? 'bg-blue-500' : 'bg-red-500'
                     }`}></div>
-                    
-                    {/* Default device star */}
-                    <button
-                      onClick={() => handleSetDefault(device.id)}
-                      className={`text-lg transition-colors ${
-                        defaultDevice === device.name ? 'text-yellow-500' : 'text-zinc-400 dark:text-zinc-500'
-                      }`}
-                    >
-                      ⭐
-                    </button>
                   </div>
                 </div>
               ))}
