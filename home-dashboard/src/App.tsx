@@ -53,7 +53,7 @@ export default function App() {
           </>
         ) : null}
         {mainTab === "player" && (
-          <div className="flex-1 w-full h-full">
+          <div className="flex-1 w-full h-full overflow-y-auto custom-scrollbar">
             <MusicControlWidget />
           </div>
         )}
